@@ -19,7 +19,8 @@ public class JogoTest {
 	@Test
 	public void testHeuristicaJogador() {
 		int h = jogo.heuristica(null);
-		assertEquals(0, h);		
+		System.out.println(h);
+		assertEquals(0, h);
 	}
 
 }
