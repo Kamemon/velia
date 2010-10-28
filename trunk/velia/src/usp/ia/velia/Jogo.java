@@ -12,6 +12,16 @@ public class Jogo {
 	// a posição do tabuleiro indica qual jogador jogou naquela posição
 	private Jogador[][][] tabuleiro = new Jogador[N][N][N]; 
 	
+       public Jogador[][][] viewTabuleiro() {
+	            
+            Jogador[][][] copia = new Jogador[N][N][N];
+            for (int i=0; i<N; i++)
+                for (int j=0; j<N; j++)
+                    for (int k=0; k<N; k++)
+                        copia[i][j][k] = this.tabuleiro[i][j][k];
+            return copia;
+        }
+
 	public void jogar(Jogada jogada) throws JogadaIlegal {
 		
 	}
