@@ -28,31 +28,40 @@ public class Jogo {
 
 	// heurística = como está o jogo.. tal jogador está bem ou mal
 	public int heuristica(Jogador jogador) {
+		int h=0;
+		int i;
 		
-		return heuBi(tabuleiro[0], jogador);
+		for(i=0;i<N;i++)h+=heuBi(tabuleiro[i],jogador);
+			
+		return h;
 	}
 	
+	//TODO: n eh pra testas apenas se eh igual a jogador, mas se eh branco tb
 	//heuristica para o caso bi-dimensional 
 	private int heuBi(Jogador tab[][], Jogador jogador){
 		int i,j,k;
 		int h=0;//a heuristica, oh!
 		int cont=0;//contador de acertos
-		int contj = 0;
+		int contj[] = new int[N];
+		int contd[] = new int[2];//contadores da diagonal
 		
 		for(j=0;j<N;j++){
+			cont=0;
 			for(i=0;i<N;i++){
-				if(tab[j][i].equals(jogador)){
+				if(tab[j][i]==jogador){
 					cont++;
-					contj++;
-				}else
-					break;
+					contj[j]++;
+					if(i==j)contd[0]++;
+					if(i+j+1==N)contd[1]++;
+				}
 			}
 			if(cont==N)	h++;
 		}
-		if(contj==N) h++;
+		for(j=0;j<N;j++)if(contj[j]==N) h++;
+		for(j=0;j<2;j++)if(contd[j]==N) h++;
 		
 		
-		return 0;
+		return h;
 	}
 	
 	public int heuristica(Jogador jogador, Jogada jogada) {
