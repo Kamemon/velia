@@ -86,6 +86,14 @@ public class Sketch extends PApplet {
                 rotZ += 0.1;
     }
     
+    /**
+     * Usando o processing processing-0191 (versão não-estável)
+     * Download em:
+     * http://code.google.com/p/processing/downloads/detail?name=processing-0191.tgz&can=2&q=
+     * 
+     * Rodar com VM Arguments = -Djava.library.path=<PROCESSING_HOME>/libraries/opengl/library
+     *  
+     */
     public static void main(String[] args) {
         
         PApplet.main(new String[] { "usp.ia.velia.graph.Sketch" });
