@@ -22,8 +22,22 @@ public class Jogo {
             return copia;
         }
 
+        public void jogar(Jogador jogador, int x, int y, int z) throws JogadaIlegal {
+
+            if (this.tabuleiro[x][y][z] != null) {
+                throw new JogadaIlegal();
+            } else {
+                this.tabuleiro[x][y][z] = jogador;
+            }
+        }
+       
 	public void jogar(Jogada jogada) throws JogadaIlegal {
 		
+	    int x = jogada.getPosicao().getCoord()[0];
+            int y = jogada.getPosicao().getCoord()[1];
+            int z = jogada.getPosicao().getCoord()[2];
+            
+            this.jogar(jogada.getJogador(), x, y, z);
 	}
 
 	// heurística = como está o jogo.. tal jogador está bem ou mal

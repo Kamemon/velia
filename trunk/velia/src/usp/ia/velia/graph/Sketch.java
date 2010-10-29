@@ -1,15 +1,13 @@
 package usp.ia.velia.graph;
 
 import processing.core.PApplet;
-import usp.ia.velia.Jogada;
 import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.Jogo;
-import usp.ia.velia.Posicao;
 import usp.ia.velia.Jogador.Insignia;
 
 @SuppressWarnings("serial")
-public class Processing extends PApplet {
+public class Sketch extends PApplet {
 
     // atributos do jogo
     private Jogo jogo;
@@ -24,10 +22,10 @@ public class Processing extends PApplet {
     public void setup() {
         
         // configurações do Processing
-        size(800, 800, OPENGL);         
+        size(600, 600, OPENGL);         
         perspective(PI/4, 1.0f*width/height, 0.1f, 200);
-        camera(0,  0, 50,                        //  posição da câmera
-                0, 0, 0,                         //  centro de atenção da câmera
+        camera(30,  -20, 70,                        //  posição da câmera
+                10, 10, 0,                         //  centro de atenção da câmera
                 0, 1, 0);                        //  vetor vertical da câmera
         frameRate(20);
 
@@ -38,13 +36,19 @@ public class Processing extends PApplet {
         this.tab = new Tabuleiro(this, jogo);
         
         // rotina pra teste
-        Posicao p1 = new Posicao(0, 0, 0);
-        Posicao p2 = new Posicao(1, 1, 0);
-        Jogada j1 = new Jogada(jog1, p1);
-        Jogada j2 = new Jogada(jog2, p2);
         try {
-            jogo.jogar(j1);
-            jogo.jogar(j2);
+            jogo.jogar(jog1, 0, 0, 0);
+            jogo.jogar(jog1, 0, 2, 0);
+            jogo.jogar(jog1, 2, 0, 0);
+            jogo.jogar(jog1, 2, 2, 0);
+            jogo.jogar(jog2, 1, 0, 1);
+            jogo.jogar(jog2, 1, 2, 1);
+            jogo.jogar(jog2, 0, 1, 1);
+            jogo.jogar(jog2, 2, 1, 1);
+            jogo.jogar(jog1, 0, 0, 2);
+            jogo.jogar(jog1, 0, 2, 2);
+            jogo.jogar(jog1, 2, 0, 2);
+            jogo.jogar(jog1, 2, 2, 2);
         } catch (JogadaIlegal e) {
             e.printStackTrace();
         }
@@ -53,12 +57,14 @@ public class Processing extends PApplet {
     public void draw() {
         
         lights();
+        background(0);
 
         // movimento do mouse e teclas de câmera (w, s, a, d, q, e)
         rotateX(rotX);
         rotateY(rotY);
         rotateZ(rotZ);
 
+        // desenha tabuleiro
         this.tab.draw();
     }
     
@@ -82,7 +88,7 @@ public class Processing extends PApplet {
     
     public static void main(String[] args) {
         
-        //PApplet.main(new String[] {"--present",  "usp.ia.velia.graph.Processing" });
+        PApplet.main(new String[] { "usp.ia.velia.graph.Sketch" });
     }
 
 }
