@@ -7,6 +7,12 @@ public class Jogador {
     private String nome;
     private Insignia insignia; // a marca, no caso tradicional X ou O
 	
+    
+    public Jogador(String nome, Insignia insignia) {
+        this.nome = nome;
+        this.insignia = insignia;
+    }
+
     public String getNome() {
         return nome;
     }
