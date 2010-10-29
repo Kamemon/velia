@@ -13,7 +13,7 @@ public class Tabuleiro {
     private PApplet processing;
     
     
-    public Tabuleiro(Jogo jogo, PApplet processing) {
+    public Tabuleiro(PApplet processing, Jogo jogo) {
         this.jogo = jogo;
         this.processing = processing;
     }
