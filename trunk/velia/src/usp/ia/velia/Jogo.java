@@ -8,11 +8,17 @@ package usp.ia.velia;
 public class Jogo {
 	
 	private final int N = 3; // dimensão, no caso tradicional 3
+	private final int MAX_HEURISTICA = 42; // valor máximo da heurística
 	
 	// a posição do tabuleiro indica qual jogador jogou naquela posição
 	private Jogador[][][] tabuleiro = new Jogador[N][N][N]; 
+
+	// atributos usados quando alguém vence o jogo
+	private Jogador vencedor;
+	private int[][] risca; // como o jogador venceu (3 triplas ordenados!)
+	private boolean finished = false;
 	
-       public Jogador[][][] viewTabuleiro() {
+        public Jogador[][][] viewTabuleiro() {
 	            
             Jogador[][][] copia = new Jogador[N][N][N];
             for (int i=0; i<N; i++)
@@ -28,6 +34,7 @@ public class Jogo {
                 throw new JogadaIlegal();
             } else {
                 this.tabuleiro[x][y][z] = jogador;
+                this.verificaTermino();
             }
         }
        
@@ -89,6 +96,46 @@ public class Jogo {
 	 */
 	public boolean isFinished() {
 	    
-	    return false;
+	    return finished;
+	}
+
+	/**
+	 * Checa se jogo já terminou
+	 * Caso sim, seta vencedor e risca
+	 */
+	private void verificaTermino() {
+	    
+	    Jogador[][][] t = this.tabuleiro;
+	    
+	    for (int y=0; y<3; y++) { // planos y = 0, 1, 2 
+
+	        // checa "linhas"
+	        for (int z=0; z<3; z++) {
+	            if (t[0][y][z] == t[1][y][z] && t[0][y][z] == t[2][y][z]) {
+	                this.vencedor = t[0][y][z];
+	                // TODO: setar risca
+	                return;
+	            }
+	        }
+	    }
+	    
+	    // mór rolê isso daki =/
+	    
+	    // descendo em z a partir das laterais diagonais (4 pivots, 3 cada)
+	    
+	    // descendo em z a partir do centro (1 pivot, 1 cada)
+	    
+	    // descendo em z a partir das laterais centrais (4 pivots, 2 cada)
+	    
+	}
+	
+	public Jogador getVencedor() {
+        
+	    return vencedor;
+	}
+	
+	public int[][] getRisca() {
+	    
+	    return risca;
 	}
 }
