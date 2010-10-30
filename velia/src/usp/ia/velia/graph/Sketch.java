@@ -1,7 +1,10 @@
 package usp.ia.velia.graph;
 
 import processing.core.PApplet;
+import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
+import usp.ia.velia.JogadorHumano;
+import usp.ia.velia.JogadorMaquina;
 import usp.ia.velia.Jogo;
 import usp.ia.velia.Jogador.Insignia;
 
@@ -13,7 +16,7 @@ public class Sketch extends PApplet {
     // atributos do jogo
     private Jogo jogo;
     private Tabuleiro tab;
-    private Jogador jog1, jog2, jogadorDaVez;
+    private Jogador humano, maquina, jogadorDaVez;
     private GameMode gameMode = GameMode.CAMERA;
 
 
@@ -33,35 +36,11 @@ public class Sketch extends PApplet {
         frameRate(20);
 
         // configurações do jogo
-        this.jog1 = new Jogador("Humano", Insignia.X);
-        this.jog2 = new Jogador("PC", Insignia.O);
-        this.jogadorDaVez = jog1; // começa com humano
+        this.humano = new JogadorHumano("Humano", Insignia.X);
+        this.maquina = new JogadorMaquina("Máquina", Insignia.O);
         this.jogo = new Jogo();
         this.tab = new Tabuleiro(this, jogo);
-        
-        // TODO: será q tem como fazer:
-        // classes JogadorHumano e JogadorPC que implementem interface Jogador
-        // aí aqui o sketch faz jogador.getJogada
-        // e o sketch processa a jogada retornada
-        // ?
-        
-//        // rotina pra teste
-//        try {
-//            jogo.jogar(jog1, 0, 0, 0);
-//            jogo.jogar(jog1, 0, 2, 0);
-//            jogo.jogar(jog1, 2, 0, 0);
-//            jogo.jogar(jog1, 2, 2, 0);
-//            jogo.jogar(jog2, 1, 0, 1);
-//            jogo.jogar(jog2, 1, 2, 1);
-//            jogo.jogar(jog2, 0, 1, 1);
-//            jogo.jogar(jog2, 2, 1, 1);
-//            jogo.jogar(jog1, 0, 0, 2);
-//            jogo.jogar(jog1, 0, 2, 2);
-//            jogo.jogar(jog1, 2, 0, 2);
-//            jogo.jogar(jog1, 2, 2, 2);
-//        } catch (JogadaIlegal e) {
-//            e.printStackTrace();
-//        }
+        this.jogadorDaVez = humano;
     }
     
     public void draw() {
@@ -74,7 +53,7 @@ public class Sketch extends PApplet {
         rotateY(rotY);
         rotateZ(rotZ);
 
-        // desenha tabuleiro
+        // desenha tabuleiro de acordo com estado de this.jogo
         this.tab.draw();
     }
     
@@ -94,12 +73,13 @@ public class Sketch extends PApplet {
             this.moveCamera(key);
         }
         
-        // controle do cursor
+        // controle do cursor e ativação da jogada
         if (gameMode == GameMode.PLAY) {
             if (key == PApplet.ENTER) {
-                this.jogar();
+                this.jogada();
             } else {
-                this.tab.moveCursor(key);
+                if (jogadorDaVez == humano)
+                    this.tab.moveCursor(key);
             }
         }
         
@@ -121,19 +101,35 @@ public class Sketch extends PApplet {
                 rotZ += 0.1;        
     }
     
-    private void jogar() {
+    // TODO: por enquanto algumas coisas aqui (sincronizar e ifs com jogadorDaVez)
+    // não fazem sentido porque a jogada de máquina é instantânea,
+    // mas depois de implementado o minimax talvez não seja
+    private synchronized void jogada() {
         
-        // jogar
-        this.tab.marcar(jogadorDaVez);
-        
-        // troca a vez do jogador
-        if (jogadorDaVez == jog1)
-            jogadorDaVez = jog2;
-        else
-            jogadorDaVez = jog1;
-        
-        // volta o cursor
-        this.tab.backCursor();
+        if (jogadorDaVez == humano) {
+            
+            this.tab.marcar(humano);
+            jogadorDaVez = maquina;
+            this.tab.disableCursor();
+            
+            // TODO: verificar final de partida
+            
+            // agora é vez da máquina jogar
+            int[] pos = maquina.escolheJogada(jogo);
+            try {
+                this.jogo.jogar(maquina, pos[0], pos[1], pos[2]);
+            } catch (JogadaIlegal e) {
+                e.printStackTrace();
+            }
+
+            // TODO: verificar final de partida
+
+            jogadorDaVez = humano;
+            // volta o cursor
+            this.tab.backCursor();
+            this.tab.enableCursor();
+        }
+
     }
     
     /**

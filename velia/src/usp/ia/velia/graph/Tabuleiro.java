@@ -86,6 +86,10 @@ public class Tabuleiro {
         this.cursor.draw();
     }
     
+    /**
+     * Efetua jogada para o jogador onde está marcada a insígnia
+     * @param jogador
+     */
     public void marcar(Jogador jogador) {
         
         int x = this.cursor.getCoord()[0];
@@ -97,7 +101,7 @@ public class Tabuleiro {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Move o cursor pelo tabuleiro de acordo com o comando do usuário
      * @param key teclas afetam a movimentação: a, s, d, q, w, e

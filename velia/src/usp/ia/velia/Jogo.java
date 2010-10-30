@@ -82,4 +82,13 @@ public class Jogo {
 		
 		return 0;
 	}
+	
+	/**
+	 * Indica se jogo já acabou
+	 * @return
+	 */
+	public boolean isFinished() {
+	    
+	    return false;
+	}
 }

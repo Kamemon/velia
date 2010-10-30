@@ -1,6 +1,6 @@
 package usp.ia.velia;
 
-public class Jogador {
+public abstract class Jogador {
 	
     public enum Insignia {X, O};
 	
@@ -25,6 +25,8 @@ public class Jogador {
     public void setInsignia(Insignia insignia) {
         this.insignia = insignia;
     }
+    
+    public abstract int[] escolheJogada(Jogo jogo);
     
     @Override
     public int hashCode() {
