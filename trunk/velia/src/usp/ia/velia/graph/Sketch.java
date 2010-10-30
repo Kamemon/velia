@@ -1,7 +1,6 @@
 package usp.ia.velia.graph;
 
 import processing.core.PApplet;
-import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.Jogo;
 import usp.ia.velia.Jogador.Insignia;
@@ -9,10 +8,14 @@ import usp.ia.velia.Jogador.Insignia;
 @SuppressWarnings("serial")
 public class Sketch extends PApplet {
 
+    private enum GameMode {CAMERA, PLAY};
+
     // atributos do jogo
     private Jogo jogo;
     private Tabuleiro tab;
-    private Jogador jog1, jog2;
+    private Jogador jog1, jog2, jogadorDaVez;
+    private GameMode gameMode = GameMode.CAMERA;
+
 
     // rotação do modelo controlada interativamente:
     float rotX = 0;
@@ -24,7 +27,7 @@ public class Sketch extends PApplet {
         // configurações do Processing
         size(600, 600, OPENGL);         
         perspective(PI/4, 1.0f*width/height, 0.1f, 200);
-        camera(30,  -20, 70,                        //  posição da câmera
+        camera(30,  -20, 80,                        //  posição da câmera
                 10, 10, 0,                         //  centro de atenção da câmera
                 0, 1, 0);                        //  vetor vertical da câmera
         frameRate(20);
@@ -32,26 +35,33 @@ public class Sketch extends PApplet {
         // configurações do jogo
         this.jog1 = new Jogador("Humano", Insignia.X);
         this.jog2 = new Jogador("PC", Insignia.O);
+        this.jogadorDaVez = jog1; // começa com humano
         this.jogo = new Jogo();
         this.tab = new Tabuleiro(this, jogo);
         
-        // rotina pra teste
-        try {
-            jogo.jogar(jog1, 0, 0, 0);
-            jogo.jogar(jog1, 0, 2, 0);
-            jogo.jogar(jog1, 2, 0, 0);
-            jogo.jogar(jog1, 2, 2, 0);
-            jogo.jogar(jog2, 1, 0, 1);
-            jogo.jogar(jog2, 1, 2, 1);
-            jogo.jogar(jog2, 0, 1, 1);
-            jogo.jogar(jog2, 2, 1, 1);
-            jogo.jogar(jog1, 0, 0, 2);
-            jogo.jogar(jog1, 0, 2, 2);
-            jogo.jogar(jog1, 2, 0, 2);
-            jogo.jogar(jog1, 2, 2, 2);
-        } catch (JogadaIlegal e) {
-            e.printStackTrace();
-        }
+        // TODO: será q tem como fazer:
+        // classes JogadorHumano e JogadorPC que implementem interface Jogador
+        // aí aqui o sketch faz jogador.getJogada
+        // e o sketch processa a jogada retornada
+        // ?
+        
+//        // rotina pra teste
+//        try {
+//            jogo.jogar(jog1, 0, 0, 0);
+//            jogo.jogar(jog1, 0, 2, 0);
+//            jogo.jogar(jog1, 2, 0, 0);
+//            jogo.jogar(jog1, 2, 2, 0);
+//            jogo.jogar(jog2, 1, 0, 1);
+//            jogo.jogar(jog2, 1, 2, 1);
+//            jogo.jogar(jog2, 0, 1, 1);
+//            jogo.jogar(jog2, 2, 1, 1);
+//            jogo.jogar(jog1, 0, 0, 2);
+//            jogo.jogar(jog1, 0, 2, 2);
+//            jogo.jogar(jog1, 2, 0, 2);
+//            jogo.jogar(jog1, 2, 2, 2);
+//        } catch (JogadaIlegal e) {
+//            e.printStackTrace();
+//        }
     }
     
     public void draw() {
@@ -71,9 +81,34 @@ public class Sketch extends PApplet {
     // respostas de comandos do usuário
     public void keyPressed() {
     
+        // alterna modo de jogo
+        if (key == PApplet.TAB) {
+            if (gameMode == GameMode.CAMERA)
+                gameMode = GameMode.PLAY;
+            else
+                gameMode = GameMode.CAMERA;
+        }
+        
         // controle de câmera
+        if (gameMode == GameMode.CAMERA) {
+            this.moveCamera(key);
+        }
+        
+        // controle do cursor
+        if (gameMode == GameMode.PLAY) {
+            if (key == PApplet.ENTER) {
+                this.jogar();
+            } else {
+                this.tab.moveCursor(key);
+            }
+        }
+        
+    }
+    
+    private void moveCamera(int key) {
+
         if (key == 'a')
-                rotY += -0.1;
+            rotY += -0.1;
         if (key == 'd')
                 rotY += 0.1;
         if (key == 'w')
@@ -83,7 +118,22 @@ public class Sketch extends PApplet {
         if (key == 'q')
                 rotZ += -0.1;
         if (key == 'e')
-                rotZ += 0.1;
+                rotZ += 0.1;        
+    }
+    
+    private void jogar() {
+        
+        // jogar
+        this.tab.marcar(jogadorDaVez);
+        
+        // troca a vez do jogador
+        if (jogadorDaVez == jog1)
+            jogadorDaVez = jog2;
+        else
+            jogadorDaVez = jog1;
+        
+        // volta o cursor
+        this.tab.backCursor();
     }
     
     /**
