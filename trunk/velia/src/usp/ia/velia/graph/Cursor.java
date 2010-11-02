@@ -45,7 +45,7 @@ public class Cursor {
         if (enabled) {
             int x = coord[0], y = coord[1], z = coord[2];
             int e = 10; // espaçamento
-            this.sketch.stroke(255, 0, 0);
+            this.sketch.stroke(255, 255, 0);
             this.sketch.translate(x*e, y*e, z*e); // posicionamento do cursor
             this.sketch.sphere(1);
             this.sketch.translate(-x*e, -y*e, -z*e);

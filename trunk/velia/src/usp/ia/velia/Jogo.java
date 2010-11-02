@@ -107,17 +107,17 @@ public class Jogo {
 	    
 	    Jogador[][][] t = this.tabuleiro;
 	    
-	    for (int y=0; y<3; y++) { // planos y = 0, 1, 2 
-
-	        // checa "linhas"
-	        for (int z=0; z<3; z++) {
-	            if (t[0][y][z] == t[1][y][z] && t[0][y][z] == t[2][y][z]) {
-	                this.vencedor = t[0][y][z];
-	                // TODO: setar risca
-	                return;
-	            }
-	        }
-	    }
+//	    for (int y=0; y<3; y++) { // planos y = 0, 1, 2 
+//
+//	        // checa "linhas"
+//	        for (int z=0; z<3; z++) {
+//	            if (t[0][y][z] == t[1][y][z] && t[0][y][z] == t[2][y][z]) {
+//	                this.vencedor = t[0][y][z];
+//	                // TODO: setar risca
+//	                return;
+//	            }
+//	        }
+//	    }
 	    
 	    // mór rolê isso daki =/
 	    
@@ -126,6 +126,25 @@ public class Jogo {
 	    // descendo em z a partir do centro (1 pivot, 1 cada)
 	    
 	    // descendo em z a partir das laterais centrais (4 pivots, 2 cada)
+	    
+	    // mock: verificação "simplificada"
+	    if (t[0][0][0] != null && t[0][0][0] == t[0][0][1] && t[0][0][0] == t[0][0][2]) {
+	        this.vencedor = t[0][0][0];
+	        this.finished = true;
+	        this.risca = new int[3][3];
+	        this.risca[0] = new int[]{0, 0, 0};
+                this.risca[1] = new int[]{0, 0, 1};
+                this.risca[2] = new int[]{0, 0, 2};
+	    }
+
+            if (t[2][0][0] != null && t[2][0][0] == t[2][0][1] && t[2][0][0] == t[2][0][2]) {
+                this.vencedor = t[2][0][0];
+                this.finished = true;
+                this.risca = new int[3][3];
+                this.risca[0] = new int[]{2, 0, 0};
+                this.risca[1] = new int[]{2, 0, 1};
+                this.risca[2] = new int[]{2, 0, 2};
+            }
 	    
 	}
 	

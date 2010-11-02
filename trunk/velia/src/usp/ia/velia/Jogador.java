@@ -1,5 +1,6 @@
 package usp.ia.velia;
 
+
 public abstract class Jogador {
 	
     public enum Insignia {X, O};

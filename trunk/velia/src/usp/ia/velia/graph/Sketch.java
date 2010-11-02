@@ -108,11 +108,20 @@ public class Sketch extends PApplet {
         
         if (jogadorDaVez == humano) {
             
-            this.tab.marcar(humano);
+            // jogada humano
+            int x = this.tab.getCursorCoord()[0];
+            int y = this.tab.getCursorCoord()[1];
+            int z = this.tab.getCursorCoord()[2];
+            try {
+                this.jogo.jogar(humano, x, y, z);
+            } catch (JogadaIlegal e) {
+                System.out.println("Jogada ilegal");
+                return;
+            }
             jogadorDaVez = maquina;
             this.tab.disableCursor();
             
-            // TODO: verificar final de partida
+            this.verificaTermino();
             
             // agora é vez da máquina jogar
             int[] pos = maquina.escolheJogada(jogo);
@@ -122,7 +131,7 @@ public class Sketch extends PApplet {
                 e.printStackTrace();
             }
 
-            // TODO: verificar final de partida
+            this.verificaTermino();
 
             jogadorDaVez = humano;
             // volta o cursor
@@ -132,6 +141,16 @@ public class Sketch extends PApplet {
 
     }
     
+    private void verificaTermino() {
+
+        if (this.jogo.isFinished()) { // acabou
+            
+            this.tab.finish(jogo.getRisca());
+            Jogador vencedor = jogo.getVencedor();
+            System.out.println(vencedor.getNome() + " venceu");
+        }
+    }
+
     /**
      * Usando o processing processing-0191 (versão não-estável)
      * Download em:
