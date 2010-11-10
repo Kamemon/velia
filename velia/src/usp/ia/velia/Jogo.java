@@ -18,6 +18,15 @@ public class Jogo {
 	private int[][] risca; // como o jogador venceu (3 triplas ordenados!)
 	private boolean finished = false;
 	
+	public Jogo() {
+	    
+	}
+	
+	// TODO
+	public Jogo(Jogador[][][] tabuleiro) {
+	    // não copiar a instância tabuleiro, mas sim os valores!
+	}
+	
         public Jogador[][][] viewTabuleiro() {
 	            
             Jogador[][][] copia = new Jogador[N][N][N];

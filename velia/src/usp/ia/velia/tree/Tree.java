@@ -1,19 +1,19 @@
 package usp.ia.velia.tree;
 
-public class Tree {
+public class Tree<T> {
 
-    private TreeNode root;
+    private TreeNode<T> root;
 
-    public Tree(TreeNode root) {
+    public Tree(TreeNode<T> root) {
         super();
         this.root = root;
     }
 
-    public TreeNode getRoot() {
+    public TreeNode<T> getRoot() {
         return root;
     }
 
-    public TreeNode getNextDFSNode() {
+    public TreeNode<T> getNextDFSNode() {
         return null;
     }
     
@@ -21,7 +21,7 @@ public class Tree {
         return root.polishNotation();    
     }
     
-    public TreeNode search(String label) {
+    public TreeNode<T> search(String label) {
         return root.search(label);
     }
 

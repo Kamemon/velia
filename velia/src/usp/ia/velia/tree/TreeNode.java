@@ -86,7 +86,7 @@ public class TreeNode<T> {
         this.childNodes = childNodes;
     }
 
-    public Object getToken() {
+    public T getToken() {
         return token;
     }
 
@@ -167,12 +167,12 @@ public class TreeNode<T> {
      * @param label
      * @return null, if not found.
      */
-    public TreeNode search(String label) {
+    public TreeNode<T> search(String label) {
         if (this.label.equals(label)) {
             return this;
         }
-        for (TreeNode node : this.childNodes) {
-            TreeNode resp = node.search(label);
+        for (TreeNode<T> node : this.childNodes) {
+            TreeNode<T> resp = node.search(label);
             if (resp != null)
                 return resp;
         }
