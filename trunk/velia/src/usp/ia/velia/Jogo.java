@@ -1,5 +1,8 @@
 package usp.ia.velia;
 
+import java.util.Arrays;
+
+
 /**
  * Representa a instância do jogo, i.é, como o jogo está no momento
  * @author hedema
@@ -58,12 +61,60 @@ public class Jogo {
 
 	// heurística = como está o jogo.. tal jogador está bem ou mal
 	public int heuristica(Jogador jogador) {
-		int h=0;
-		int i;
+		int i,j,k;
+		int heuristica=0;
+		int primo[] = {2,3,5,7,11,13};//2:projeção no plano i;3:no j;5: no k
 		
-		for(i=0;i<N;i++)h+=heuBi(tabuleiro[i],jogador);
-			
-		return h;
+		int[][] projecao = new int[N][N];//utilizado para 
+		long[]	projdiag = new long[N];
+		
+		//preenche cada posição das projeções com 1
+		for(i=0;i<N;i++){
+			Arrays.fill(projecao[i], 1);
+			projdiag[i] = 1;
+		}
+		
+		
+		
+		for(k=0;k<N;k++)
+			for(j=0;j<N;j++)
+				for(i=0;i<N;i++)
+					if(tabuleiro[i][j][k]==jogador | tabuleiro[i][j][k]==null){
+						projecao[j][k]*=primo[0];
+						projecao[k][i]*=primo[1];
+						projecao[i][j]*=primo[2];
+						
+						//diagonal principal
+						if(j==k)projdiag[i]*=primo[0];
+						if(k==i)projdiag[j]*=primo[1];
+						if(i==j)projdiag[k]*=primo[2];
+						//diagonal reversa
+						if(j+k==N-1)projdiag[i]*=primo[3];
+						if(k+i==N-1)projdiag[j]*=primo[4];
+						if(i+j==N-1)projdiag[k]*=primo[5];
+						
+					}
+				
+		//atenção: a semantica dos contadores agora eh outra
+		//nesses 3 for's, a heuristica maxima de saída é 27
+		for(i=0;i<N;i++)
+			for(j=0;j<N;j++)
+				for(k=0;k<3;k++)
+					if(projecao[i][j] % Math.pow(primo[k],3) == 0)heuristica++;
+		
+		
+		int hdiag=0;
+		for(i=0;i<N;i++)//percorre o vetor projdiag
+			for(j=0;j<2;j++)//itera entre diagonal principal e reversa
+				for(k=0;k<3;k++)//pra cada posição do projdiag, pra cada diagonal, checa os 3 planos
+					if(projdiag[i] % Math.pow(primo[j*N+k],3) == 0)hdiag++;
+		
+		
+		for(i=0;i<N;System.out.println(Arrays.toString(projecao[i++])));
+		
+		
+		//for(i=0;i<N;i++)h+=heuBi(tabuleiro[i],jogador);			
+		return heuristica+hdiag;
 	}
 	
 	//TODO: n eh pra testas apenas se eh igual a jogador, mas se eh branco tb
@@ -95,7 +146,7 @@ public class Jogo {
 	}
 	
 	public int heuristica(Jogador jogador, Jogada jogada) {
-		
+		//nesse caso, a heuristica é avaliada após a jogada (q pode ser de qq jogador)
 		return 0;
 	}
 	
