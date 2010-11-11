@@ -1,0 +1,4 @@
+ideias sobre o q escrever:
+	-testes de heuristica:
+		-testar se a heuristica é coerente (âmbito de projeto: e.g. dois tabuleiros disparatados têm heurísticas coerentes entre si?)
+		-testar se ela esta sendo calculada como esperado (âmbito do algoritmo da heuristica)
