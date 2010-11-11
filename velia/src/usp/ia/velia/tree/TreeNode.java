@@ -15,8 +15,8 @@ public class TreeNode<T> {
     /** Label  */
     private String label;
 
-    private TreeNode parent;
-    private List<TreeNode> childNodes;
+    private TreeNode<T> parent;
+    private List<TreeNode<T>> childNodes;
 
     /** SyntaTreeNode may have a token assigned */
     private T token;
@@ -26,7 +26,7 @@ public class TreeNode<T> {
 
     public TreeNode(String label) {
         this.label = label;
-        this.childNodes = new ArrayList<TreeNode>(2);
+        this.childNodes = new ArrayList<TreeNode<T>>(2);
         this.dFSIndex = 0;
     }
 
@@ -61,11 +61,11 @@ public class TreeNode<T> {
         return new ArrayList<TreeNode>(this.childNodes);
     }
 
-    public void setParent(TreeNode parent) {
+    public void setParent(TreeNode<T> parent) {
         this.parent = parent;
     }
 
-    public TreeNode getParent() {
+    public TreeNode<T> getParent() {
         return this.parent;
     }
 
@@ -82,7 +82,7 @@ public class TreeNode<T> {
     /**
      * @param childNodes the childNodes to set
      */
-    public void setChildNodes(List<TreeNode> childNodes) {
+    public void setChildNodes(List<TreeNode<T>> childNodes) {
         this.childNodes = childNodes;
     }
 
