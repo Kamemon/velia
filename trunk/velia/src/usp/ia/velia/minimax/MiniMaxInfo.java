@@ -7,15 +7,15 @@ public class MiniMaxInfo<T> {
     };
 
     private Tipo tipo;
-    private int heuristica;
+    private Integer value; // alfa-beta
     private T jogada;
 
     public Tipo getTipo() {
         return tipo;
     }
 
-    public int getHeuristica() {
-        return heuristica;
+    public Integer getValue() {
+        return value;
     }
 
     public T getJogada() {
@@ -26,11 +26,16 @@ public class MiniMaxInfo<T> {
         this.tipo = tipo;
     }
 
-    public void setHeuristica(int heuristica) {
-        this.heuristica = heuristica;
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public void setJogada(T jogada) {
         this.jogada = jogada;
+    }
+    
+    public String toString() {
+        
+        return Integer.toString(this.value);
     }
 }
