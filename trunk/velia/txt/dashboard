@@ -2,3 +2,10 @@ ideias sobre o q escrever:
 	-testes de heuristica:
 		-testar se a heuristica é coerente (âmbito de projeto: e.g. dois tabuleiros disparatados têm heurísticas coerentes entre si?)
 		-testar se ela esta sendo calculada como esperado (âmbito do algoritmo da heuristica)
+	
+	-heuristica:
+		Para o caso de H = minhas possibilidades (11/11/10)
+			a heutistica de um jogador antes de após uma jogada é a mesma.
+			-léo observou que, ao jogar, ele não
+		Para o caso (n implementado ainda 11/11/10) de H = minhas possibilidades - dos opoentes possibilidades
+			a heuristica pode aumentar após a jogada 
