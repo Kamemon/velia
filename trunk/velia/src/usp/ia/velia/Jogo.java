@@ -13,6 +13,8 @@ public class Jogo {
 	private final int N = 3; // dimensão, no caso tradicional 3
 	private final int MAX_HEURISTICA = 42; // valor máximo da heurística
 	
+	private Jogador jogador1, jogador2;
+	
 	// a posição do tabuleiro indica qual jogador jogou naquela posição
 	private Jogador[][][] tabuleiro = new Jogador[N][N][N]; 
 
@@ -22,6 +24,8 @@ public class Jogo {
 	private boolean finished = false;
 	
 	public Jogo() {
+	    
+	    // TODO: receber os jogadores
 	    
 	}
 	
@@ -38,6 +42,14 @@ public class Jogo {
                     for (int k=0; k<N; k++)
                         copia[i][j][k] = this.tabuleiro[i][j][k];
             return copia;
+        }
+        
+        public Jogador getAdversarioFrom(Jogador jogador) {
+            
+            if (jogador == this.jogador1)
+                return this.jogador2;
+            else
+                return this.jogador1;
         }
 
         public void jogar(Jogador jogador, int x, int y, int z) throws JogadaIlegal {
@@ -59,7 +71,12 @@ public class Jogo {
             this.jogar(jogada.getJogador(), x, y, z);
 	}
 
-	// heurística = como está o jogo.. tal jogador está bem ou mal
+	/**
+	 * Define a heurística do jogo para um jogador
+	 * Quanto maior a heurística, maiores são as possibilidades de vitória
+	 * @param jogador
+	 * @return
+	 */
 	public int heuristica(Jogador jogador) {
 		int i,j,k;
 		int heuristica=0;
@@ -145,9 +162,26 @@ public class Jogo {
 		return h;
 	}
 	
+	/**
+	 * A heuristica é avaliada após a jogada 
+	 * (que pode ser de qualquer jogador)
+	 * @param jogador
+	 * @param jogada
+	 * @return
+	 */
 	public int heuristica(Jogador jogador, Jogada jogada) {
-		//nesse caso, a heuristica é avaliada após a jogada (q pode ser de qq jogador)
 		return 0;
+	}
+	
+	/**
+	 * Define todas as jogadas que o jogador pode executar na situação atual
+	 * @param jogador
+	 * @return
+	 */
+	public Jogada[] possiveisJogadas(Jogador jogador) {
+	    
+	    // TODO
+	    return null;
 	}
 	
 	/**
@@ -164,6 +198,8 @@ public class Jogo {
 	 * Caso sim, seta vencedor e risca
 	 */
 	private void verificaTermino() {
+	    
+	    // TODO
 	    
 	    Jogador[][][] t = this.tabuleiro;
 	    
