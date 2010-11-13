@@ -57,8 +57,8 @@ public class TreeNode<T> {
     /**
      * @return the childNodes
      */
-    public List<TreeNode> getChildNodes() {
-        return new ArrayList<TreeNode>(this.childNodes);
+    public List<TreeNode<T>> getChildNodes() {
+        return new ArrayList<TreeNode<T>>(this.childNodes);
     }
 
     public void setParent(TreeNode<T> parent) {
@@ -69,9 +69,9 @@ public class TreeNode<T> {
         return this.parent;
     }
 
-    public List<TreeNode> getSiblings() {
+    public List<TreeNode<T>> getSiblings() {
         if (this.parent != null) {
-            List<TreeNode> siblings = this.parent.getChildNodes();
+            List<TreeNode<T>> siblings = this.parent.getChildNodes();
             siblings.remove(this);
             // A lista é outra, mas os objetos são os mesmos.
             return siblings;

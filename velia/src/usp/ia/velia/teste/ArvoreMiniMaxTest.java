@@ -51,13 +51,44 @@ public class ArvoreMiniMaxTest {
         
         // testa estado da árvore
         String value = tree.valuesInPolishNotation();
-        String expected = "[root null [A 6 [C 12 ][D 8 ][E 6 ]][B 16 [F 16 ][G 19 ]]]";
+        String expected = "[root 16 [A 6 [C 12 ][D 8 ][E 6 ]][B 16 [F 16 ][G 19 ]]]";
         assertEquals(expected, value);
         
         // testa jogada a ser feita
         String jogada = tree.getNextJogada();
         expected = "B";
         assertEquals(expected, jogada);
+    }
+    
+    @Test 
+    public void testPlayMax2() {
+        
+
+        ArvoreMiniMax<String> tree = new ArvoreMiniMax<String>();
+         TreeNode<MiniMaxInfo<String>> root = tree.getRoot();
+         
+         TreeNode<MiniMaxInfo<String>> node1 = tree.createNode(root, "A"); 
+         TreeNode<MiniMaxInfo<String>> node2 = tree.createNode(node1, "C");
+         tree.createLeaf(node2, "F", 10);
+         tree.createLeaf(node2, "G", 20);
+         node2 = tree.createNode(node1, "D");
+         tree.createLeaf(node2, "H", 15);
+
+         node1 = tree.createNode(root, "B");
+         node2 = tree.createNode(node1, "E");
+         tree.createLeaf(node2, "I", 13);
+         
+         tree.finishTree();
+         
+         // testa estado da árvore
+         String value = tree.valuesInPolishNotation();
+         String expected = "[root 15 [A 15 [C 20 [F 10 ][G 20 ]][D 15 [H 15 ]]][B 13 [E 13 [I 13 ]]]]";  
+         assertEquals(expected, value);
+         
+         // testa jogada a ser feita
+         String jogada = tree.getNextJogada();
+         expected = "A";
+         assertEquals(expected, jogada);         
     }
 
 }
