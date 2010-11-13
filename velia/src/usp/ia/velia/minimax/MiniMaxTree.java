@@ -14,7 +14,7 @@ import usp.ia.velia.tree.TreeNode;
  *            define o que é uma jogada é genérica (pelo mesmo motivo, deve ser o agente que tem de construir a árvore,
  *            através de chamadas de insertNode)
  */
-public class ArvoreMiniMax<T> {
+public class MiniMaxTree<T> {
 
     private final String ROOT_LABEL = "root";
 
@@ -26,7 +26,7 @@ public class ArvoreMiniMax<T> {
      * 
      * @param jogo Estado atual do jogo (quando é a vez de MAX jogar)
      */
-    public ArvoreMiniMax() {
+    public MiniMaxTree() {
 
         this.root.setToken(new MiniMaxInfo<T>());
         this.root.getToken().setTipo(MiniMaxInfo.Tipo.MAX); // raiz é MAX (sem jogada associada)

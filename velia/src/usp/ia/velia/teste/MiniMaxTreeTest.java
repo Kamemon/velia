@@ -5,17 +5,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import usp.ia.velia.minimax.ArvoreMiniMax;
+import usp.ia.velia.minimax.MiniMaxTree;
 import usp.ia.velia.minimax.MiniMaxInfo;
 import usp.ia.velia.tree.TreeNode;
 
-public class ArvoreMiniMaxTest {
+public class MiniMaxTreeTest {
 
     
     @Test
     public void testBuildTree() {
         
-        ArvoreMiniMax<String> tree = new ArvoreMiniMax<String>();
+        MiniMaxTree<String> tree = new MiniMaxTree<String>();
         TreeNode<MiniMaxInfo<String>> root = tree.getRoot();
         
         TreeNode<MiniMaxInfo<String>> node1 = tree.createNode(root, "A"); 
@@ -35,7 +35,7 @@ public class ArvoreMiniMaxTest {
     @Test 
     public void testPlayMax() {
         
-        ArvoreMiniMax<String> tree = new ArvoreMiniMax<String>();
+        MiniMaxTree<String> tree = new MiniMaxTree<String>();
         TreeNode<MiniMaxInfo<String>> root = tree.getRoot();
         
         TreeNode<MiniMaxInfo<String>> node1 = tree.createNode(root, "A"); 
@@ -64,7 +64,7 @@ public class ArvoreMiniMaxTest {
     public void testPlayMax2() {
         
 
-        ArvoreMiniMax<String> tree = new ArvoreMiniMax<String>();
+        MiniMaxTree<String> tree = new MiniMaxTree<String>();
          TreeNode<MiniMaxInfo<String>> root = tree.getRoot();
          
          TreeNode<MiniMaxInfo<String>> node1 = tree.createNode(root, "A"); 
