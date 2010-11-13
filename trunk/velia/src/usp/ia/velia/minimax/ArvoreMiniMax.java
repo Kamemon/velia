@@ -101,31 +101,51 @@ public class ArvoreMiniMax<T> {
         // Esse passo poderia ser automático (atrelado ao método insertNode)
         // mas preferimos assim para diminuir o overhead, já que este é um método custoso
 
-        for (TreeNode<MiniMaxInfo<T>> leaf: this.leafs) {
-            
-            Integer value = leaf.getToken().getValue();
-            TreeNode<MiniMaxInfo<T>> parent = leaf.getParent();
-            while (parent != this.root) {
-                
-                MiniMaxInfo<T> info = parent.getToken();
-                if (info.getValue() == null) {
-                    info.setValue(value);
-                }
-                else {
-                    // FIXME bug: os valores são propagados pra cima indescriminadamente
-                    // TODO: caso de teste pra falhar devido a esse bug
-                    // TODO: caso valor não se propague para nível acima, propagação deve ser encerrada
-                    if (info.getTipo() == Tipo.MAX && value > info.getValue())
-                        info.setValue(value);
-                    if (info.getTipo() == Tipo.MINI && value < info.getValue())
-                        info.setValue(value);
-                }
-                
-                parent = parent.getParent();
-            }
-        }
+        // faz uma busca em profundidade pela árvore
+        // processando o nó quando ele sai da pilha (pós ordem), 
+        // caso não seja folha
+        this.search(this.root);
     }
 
+    /**
+     * Busca em produndidade com processamento pós-ordem (exceto para folhas)
+     * @param node
+     */
+    private void search(TreeNode<MiniMaxInfo<T>> node) {
+
+        if (node.isLeaf())
+            return;
+        
+        for(TreeNode<MiniMaxInfo<T>> child: node.getChildNodes()) {
+            this.search(child);
+        }
+        
+        this.processNode(node);
+    }
+
+    /**
+     * Faz a propagação de valores de acordo com o algoritmo MINI-MAX
+     * @param node
+     */
+    private void processNode(TreeNode<MiniMaxInfo<T>> node) {
+    
+        MiniMaxInfo<T> info = node.getToken();
+        for (TreeNode<MiniMaxInfo<T>> child: node.getChildNodes()) {
+            
+            int value = child.getToken().getValue();
+            if (info.getValue() == null) {
+                info.setValue(value);
+            }
+            else {
+                if (info.getTipo() == Tipo.MAX && value > info.getValue())
+                    info.setValue(value);
+                if (info.getTipo() == Tipo.MINI && value < info.getValue())
+                    info.setValue(value);
+            }
+        }
+        
+    }
+    
 
     /**
      * Análise MINI-MAX
@@ -152,7 +172,7 @@ public class ArvoreMiniMax<T> {
     
     /**
      * 
-     * @return notação pré-fica da árvore exibindo os valores propagados
+     * @return notação pré-fixa da árvore exibindo os valores propagados
      * pelo MINI-MAX em cada nó da árvore
      */
     public String valuesInPolishNotation() {
