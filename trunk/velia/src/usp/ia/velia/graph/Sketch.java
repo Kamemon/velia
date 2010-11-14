@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.JogadorHumano;
-import usp.ia.velia.JogadorMaquina;
+import usp.ia.velia.JogadorMaqSimples;
 import usp.ia.velia.Jogo;
 import usp.ia.velia.Jogador.Insignia;
 
@@ -37,7 +37,7 @@ public class Sketch extends PApplet {
 
         // configurações do jogo
         this.humano = new JogadorHumano("Humano", Insignia.X);
-        this.maquina = new JogadorMaquina("Máquina", Insignia.O);
+        this.maquina = new JogadorMaqSimples("Máquina", Insignia.O);
         this.jogo = new Jogo();
         this.tab = new Tabuleiro(this, jogo);
         this.jogadorDaVez = humano;
