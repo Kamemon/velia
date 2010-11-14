@@ -11,27 +11,8 @@ import usp.ia.velia.tree.TreeNode;
  */
 public class JogadorMaquina extends Jogador {
     
-    private final int N = 3;
-    
     public JogadorMaquina(String nome, Insignia insignia) {
         super(nome, insignia);
-    }
-
-    public int[] escolheJogadaSimples(Jogo jogo) {
-        
-        // paliativo (1a monalisa)
-        
-        // joga na 1a posição disponível
-        for (int i=0; i<N; i++) {
-            for (int j=0; j<N; j++) {
-                for (int k=0; k<N; k++) {
-                    if (jogo.viewTabuleiro()[i][j][k] == null) {
-                        return new int[]{i, j, k};
-                    }
-                }
-            }
-        }        
-        return new int[3];
     }
     
     @Override
@@ -46,7 +27,7 @@ public class JogadorMaquina extends Jogador {
         return null;
     }
     
-    public int[] escolheJogadaMiniMax(Jogo jogoAtual) throws JogadaIlegal {
+    private int[] escolheJogadaMiniMax(Jogo jogoAtual) throws JogadaIlegal {
         
         // pra cada jogo resultante de uma possível jogada do agente na situação atual do jogo
         // avaliar próximas jogadas possívels do jogador adversário
