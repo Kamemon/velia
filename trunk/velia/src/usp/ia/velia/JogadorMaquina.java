@@ -1,6 +1,8 @@
 package usp.ia.velia;
 
+import usp.ia.velia.minimax.MiniMaxInfo;
 import usp.ia.velia.minimax.MiniMaxTree;
+import usp.ia.velia.tree.TreeNode;
 
 /**
  * Agente IA que define suas jogadas através do MINI-MAX
@@ -15,8 +17,7 @@ public class JogadorMaquina extends Jogador {
         super(nome, insignia);
     }
 
-    @Override
-    public int[] escolheJogada(Jogo jogo) {
+    public int[] escolheJogadaSimples(Jogo jogo) {
         
         // paliativo (1a monalisa)
         
@@ -33,24 +34,53 @@ public class JogadorMaquina extends Jogador {
         return new int[3];
     }
     
-    // em construção
-    public int[] escolheeJogada(Jogo jogo) {
+    @Override
+    public int[] escolheJogada(Jogo jogo) {
         
+        try {
+            return escolheJogadaMiniMax(jogo);
+        } catch (JogadaIlegal e) {
+            System.out.println("Agente cogitou jogada ilegal");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public int[] escolheJogadaMiniMax(Jogo jogoAtual) throws JogadaIlegal {
+        
+        // pra cada jogo resultante de uma possível jogada do agente na situação atual do jogo
+        // avaliar próximas jogadas possívels do jogador adversário
+        // fazer isso ainda mais outra vez para as jogadas seguintes do agente
+
         MiniMaxTree<Jogada> minimax = new MiniMaxTree<Jogada>();
-        Jogador adversario = jogo.getAdversarioFrom(this);
+        Jogador adversario = jogoAtual.getAdversarioFrom(this);
         
         // coloca primeiro nível na árvore minimax
-        for (Jogada jogada: jogo.possiveisJogadas(this)) {
+        for (Jogada primeiraJogada: jogoAtual.possiveisJogadas(this)) {
             
-            // TODO
-            // coloca no minimax
-            // pra cada jogo resultante de uma possível jogada
-            // avaliar próximas jogadas possívels do outro jogador e colocar no minimax
-            // fazer isso ainda mais outra vez para suas jogadas
+            TreeNode<MiniMaxInfo<Jogada>> father1 = minimax.createNode(minimax.getRoot(), primeiraJogada);
+            Jogo jogo2 = new Jogo(jogoAtual.viewTabuleiro()); // jogo depois do 1o movimento (max)
+            jogo2.jogar(primeiraJogada);
+            
+            // coloca segundo nível da árvore minimax
+            for (Jogada segundaJogada: jogo2.possiveisJogadas(adversario)) {
+                
+                TreeNode<MiniMaxInfo<Jogada>> father2 = minimax.createNode(father1, segundaJogada);
+                Jogo jogo3 = new Jogo(jogo2.viewTabuleiro()); // jogo depois do 2o movimento (mini)
+                jogo3.jogar(segundaJogada);
+                
+                // folha minimax (com a heurística do jogo resultante do 3o movimento)
+                for (Jogada terceiraJogada: jogo3.possiveisJogadas(this)) {
+                    
+                    Jogo jogo4 = new Jogo(jogo3.viewTabuleiro()); // jogo após o 3o movimento (max)
+                    jogo4.jogar(terceiraJogada);
+                    int h = jogo4.heuristica(this);
+                    minimax.createLeaf(father2, terceiraJogada, h);
+                }
+            }
         }
         
         minimax.finishTree();
-        
         return minimax.getNextJogada().getPosicao().getCoord();
     }
 }
