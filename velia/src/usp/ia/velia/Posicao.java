@@ -1,5 +1,7 @@
 package usp.ia.velia;
 
+import java.util.Arrays;
+
 public class Posicao {
 	
     private int N = 3;
@@ -18,7 +20,7 @@ public class Posicao {
     }
 
     public int[] getCoord() {
-        return coord;
+        return Arrays.copyOf(coord,N);
     }
     
 }
