@@ -8,4 +8,10 @@ ideias sobre o q escrever:
 			a heutistica de um jogador antes de após uma jogada é a mesma.
 			-léo observou que, ao jogar, ele não
 		Para o caso (n implementado ainda 11/11/10) de H = minhas possibilidades - dos opoentes possibilidades
-			a heuristica pode aumentar após a jogada 
+			a heuristica pode aumentar após a jogada
+			
+			
+			
+LEO, getAdversarioFrom ????????????????????????????????????!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+mudanças: Posicao retorna copia de coord; 
