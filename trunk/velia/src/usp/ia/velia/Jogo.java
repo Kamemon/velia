@@ -23,18 +23,15 @@ public class Jogo {
 	private int[][] risca; // como o jogador venceu (3 triplas ordenados!)
 	private boolean finished = false;
 	
-	public Jogo() {
-	    
-	    // TODO: receber os jogadores
-	    
-	}
-	
+	public Jogo() {	    
+	    // TODO: receber os jogadores	    
+	}	
 	// TODO
 	public Jogo(Jogador[][][] tabuleiro) {
 	    // não copiar a instância tabuleiro, mas sim os valores!
 	}
 	
-        public Jogador[][][] viewTabuleiro() {
+	public Jogador[][][] viewTabuleiro() {
 	            
             Jogador[][][] copia = new Jogador[N][N][N];
             for (int i=0; i<N; i++)
@@ -42,10 +39,9 @@ public class Jogo {
                     for (int k=0; k<N; k++)
                         copia[i][j][k] = this.tabuleiro[i][j][k];
             return copia;
-        }
+    }
         
-        public Jogador getAdversarioFrom(Jogador jogador) {
-            
+        public Jogador getAdversarioFrom(Jogador jogador) {            
             if (jogador == this.jogador1)
                 return this.jogador2;
             else
@@ -53,50 +49,53 @@ public class Jogo {
         }
 
         public void jogar(Jogador jogador, int x, int y, int z) throws JogadaIlegal {
-
             if (this.tabuleiro[x][y][z] != null) {
                 throw new JogadaIlegal();
             } else {
                 this.tabuleiro[x][y][z] = jogador;
-                this.verificaTermino();
+                //this.verificaTermino();
             }
         }
        
 	public void jogar(Jogada jogada) throws JogadaIlegal {
-		
-	    int x = jogada.getPosicao().getCoord()[0];
-            int y = jogada.getPosicao().getCoord()[1];
-            int z = jogada.getPosicao().getCoord()[2];
-            
-            this.jogar(jogada.getJogador(), x, y, z);
+		int[] coord = jogada.getPosicao().getCoord();           
+        this.jogar(jogada.getJogador(),coord[0],coord[1],coord[2]);
 	}
-
+	
 	/**
-	 * Define a heurística do jogo para um jogador
-	 * Quanto maior a heurística, maiores são as possibilidades de vitória
-	 * @param jogador
+	 * Heurística Extendida Para Grupo
+	 * Checa a heurística de todo um grupo, definido pelo vetor de jogadores
+	 * @param checando Jogadores a serem considerados como equipe. Para se saber quantas
+	 * possibilidades algum jogador tem, pode-se passar um array com o jagador em questão
+	 * e o jogador null.
 	 * @return
 	 */
-	public int heuristica(Jogador jogador) {
+	public int  XHeuPGrupo(Jogador[] checando){
+		boolean conta=false;
+		
+
 		int i,j,k;
 		int heuristica=0;
 		int primo[] = {2,3,5,7,11,13};//2:projeção no plano i;3:no j;5: no k
 		
 		int[][] projecao = new int[N][N];//utilizado para 
 		long[]	projdiag = new long[N];
+		long	projMulD = 1;//projeção das diagonais que envolvem as 3 dimensoes
 		
 		//preenche cada posição das projeções com 1
 		for(i=0;i<N;i++){
 			Arrays.fill(projecao[i], 1);
 			projdiag[i] = 1;
-		}
-		
-		
+		}		
 		
 		for(k=0;k<N;k++)
 			for(j=0;j<N;j++)
-				for(i=0;i<N;i++)
-					if(tabuleiro[i][j][k]==jogador | tabuleiro[i][j][k]==null){
+				for(i=0,conta=false;i<N;conta=false,i++){
+					for(Jogador jogador : checando)
+						conta |= (tabuleiro[i][j][k]==jogador);
+					
+					
+					if(conta){
 						projecao[j][k]*=primo[0];
 						projecao[k][i]*=primo[1];
 						projecao[i][j]*=primo[2];
@@ -109,8 +108,15 @@ public class Jogo {
 						if(j+k==N-1)projdiag[i]*=primo[3];
 						if(k+i==N-1)projdiag[j]*=primo[4];
 						if(i+j==N-1)projdiag[k]*=primo[5];
-						
+						//diagonais multi-dimensionais
+						//ATENCAO ao (1,1,1) (no caso N=3)						
+						if(j==i && k==i)		projMulD*=primo[0];
+						if(j==i && k==N-1-i)	projMulD*=primo[1];
+						if(j==N-1-1 && k==i)	projMulD*=primo[2];
+						if(j==N-1-1 && k==N-1-i)projMulD*=primo[3];
+	
 					}
+				}
 				
 		//atenção: a semantica dos contadores agora eh outra
 		//nesses 3 for's, a heuristica maxima de saída é 27
@@ -126,45 +132,26 @@ public class Jogo {
 				for(k=0;k<3;k++)//pra cada posição do projdiag, pra cada diagonal, checa os 3 planos
 					if(projdiag[i] % Math.pow(primo[j*N+k],3) == 0)hdiag++;
 		
-		
-		for(i=0;i<N;System.out.println(Arrays.toString(projecao[i++])));
-		
-		
-		//for(i=0;i<N;i++)h+=heuBi(tabuleiro[i],jogador);			
-		return heuristica+hdiag;
+		int hMulD=0;
+		for(i=0;i<4;i++)	if(projMulD % Math.pow(primo[i], 3)==0)hMulD++;
+				
+		return heuristica+hdiag+hMulD;
+	}	
+	/**
+	 * Define a heurística do jogo para um jogador
+	 * Quanto maior a heurística, maiores são as possibilidades de vitória
+	 * @param jogador
+	 * @return
+	 */
+	public int heuristica(Jogador jogador) {		
+		return XHeuPGrupo(new Jogador[]{jogador,null});
 	}
 	
-	//TODO: n eh pra testas apenas se eh igual a jogador, mas se eh branco tb
-	//heuristica para o caso bi-dimensional 
-	private int heuBi(Jogador tab[][], Jogador jogador){
-		int i,j,k;
-		int h=0;//a heuristica, oh!
-		int cont=0;//contador de acertos
-		int contj[] = new int[N];
-		int contd[] = new int[2];//contadores da diagonal
-		
-		for(j=0;j<N;j++){
-			cont=0;
-			for(i=0;i<N;i++){
-				if(tab[j][i]==jogador){
-					cont++;
-					contj[j]++;
-					if(i==j)contd[0]++;
-					if(i+j+1==N)contd[1]++;
-				}
-			}
-			if(cont==N)	h++;
-		}
-		for(j=0;j<N;j++)if(contj[j]==N) h++;
-		for(j=0;j<2;j++)if(contd[j]==N) h++;
-		
-		
-		return h;
-	}
 	
 	/**
 	 * A heuristica é avaliada após a jogada 
-	 * (que pode ser de qualquer jogador)
+	 * (que pode ser de qualquer jogador), mas a jogada não
+	 * deve é efetuada no jogo em questão. É uma hipótese
 	 * @param jogador
 	 * @param jogada
 	 * @return
@@ -188,8 +175,7 @@ public class Jogo {
 	 * Indica se jogo já acabou
 	 * @return
 	 */
-	public boolean isFinished() {
-	    
+	public boolean isFinished() {	    
 	    return finished;
 	}
 
@@ -197,60 +183,14 @@ public class Jogo {
 	 * Checa se jogo já terminou
 	 * Caso sim, seta vencedor e risca
 	 */
-	private void verificaTermino() {
-	    
-	    // TODO
-	    
-	    Jogador[][][] t = this.tabuleiro;
-	    
-//	    for (int y=0; y<3; y++) { // planos y = 0, 1, 2 
-//
-//	        // checa "linhas"
-//	        for (int z=0; z<3; z++) {
-//	            if (t[0][y][z] == t[1][y][z] && t[0][y][z] == t[2][y][z]) {
-//	                this.vencedor = t[0][y][z];
-//	                // TODO: setar risca
-//	                return;
-//	            }
-//	        }
-//	    }
-	    
-	    // mór rolê isso daki =/
-	    
-	    // descendo em z a partir das laterais diagonais (4 pivots, 3 cada)
-	    
-	    // descendo em z a partir do centro (1 pivot, 1 cada)
-	    
-	    // descendo em z a partir das laterais centrais (4 pivots, 2 cada)
-	    
-	    // mock: verificação "simplificada"
-	    if (t[0][0][0] != null && t[0][0][0] == t[0][0][1] && t[0][0][0] == t[0][0][2]) {
-	        this.vencedor = t[0][0][0];
-	        this.finished = true;
-	        this.risca = new int[3][3];
-	        this.risca[0] = new int[]{0, 0, 0};
-                this.risca[1] = new int[]{0, 0, 1};
-                this.risca[2] = new int[]{0, 0, 2};
-	    }
-
-            if (t[2][0][0] != null && t[2][0][0] == t[2][0][1] && t[2][0][0] == t[2][0][2]) {
-                this.vencedor = t[2][0][0];
-                this.finished = true;
-                this.risca = new int[3][3];
-                this.risca[0] = new int[]{2, 0, 0};
-                this.risca[1] = new int[]{2, 0, 1};
-                this.risca[2] = new int[]{2, 0, 2};
-            }
-	    
+	public boolean verificaTermino(Jogador jogador) {
+		return XHeuPGrupo(new Jogador[]{jogador}) > 0;
 	}
 	
-	public Jogador getVencedor() {
-        
+	public Jogador getVencedor() {        
 	    return vencedor;
-	}
-	
-	public int[][] getRisca() {
-	    
+	}	
+	public int[][] getRisca() {	    
 	    return risca;
 	}
 }
