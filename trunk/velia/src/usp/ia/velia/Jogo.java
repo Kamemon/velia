@@ -41,11 +41,8 @@ public class Jogo {
             return copia;
     }
         
-        public Jogador getAdversarioFrom(Jogador jogador) {            
-            if (jogador == this.jogador1)
-                return this.jogador2;
-            else
-                return this.jogador1;
+        public Jogador getAdversarioFrom(Jogador jogador) {
+        	return jogador == this.jogador1? this.jogador2 : this.jogador1;
         }
 
         public void jogar(Jogador jogador, int x, int y, int z) throws JogadaIlegal {
