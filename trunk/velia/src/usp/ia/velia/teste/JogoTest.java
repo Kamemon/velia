@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import usp.ia.velia.Jogada;
 import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.JogadorHumano;
@@ -13,6 +14,7 @@ import usp.ia.velia.Jogo;
 public class JogoTest {
 
 	Jogo jogo;
+	int N;
 	Jogador leo = new JogadorHumano("Leo",null);
 	Jogador gui = new JogadorHumano("Gui",null);
 	
@@ -20,6 +22,7 @@ public class JogoTest {
 	@Before
 	public void setUp() throws Exception {
 		jogo = new Jogo();
+		N = 3;
 	}
 
 	@Test
@@ -50,4 +53,34 @@ public class JogoTest {
 		//System.out.println(i+"\t"+Long.MAX_VALUE);
 	}
 
+	@Test
+	public void testaPossiveisJogadas(){
+		int x=0,y=0,z=0,w=0;
+		Jogada[] disponiveis;
+		int c=0;
+		int cont=0;
+		do{
+			x=Math.round((float)(Math.random()*10)%(N-1));
+			y=Math.round((float)(Math.random()*10)%(N-1));
+			z=Math.round((float)(Math.random()*10)%(N-1));
+			
+			try {
+				jogo.jogar(leo,x,y,z);
+				cont++;
+			} catch (JogadaIlegal e) {
+				int x2,y2,z2,soma;
+				boolean passou = false;
+				int somando=1;				
+				//System.out.println(x+"\t"+y+"\t"+z);
+				//System.out.println(x2+"\t"+y2+"\t"+z2 + "--");
+							
+				
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			//System.out.println(x);
+		}while(++c<600 && cont<N*N*N);
+	//	System.out.println(y+"\t"+z+"\t"+w);
+		//System.out.println("truplas sorteadas:"+c);
+	}
 }
