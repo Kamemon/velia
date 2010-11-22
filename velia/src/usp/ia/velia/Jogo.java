@@ -11,6 +11,8 @@ import java.util.Arrays;
 public class Jogo {
 	
 	private final int N = 3; // dimensão, no caso tradicional 3
+	private int Nocupadas;//quantidade de casinhas ocupadas
+	private Jogada ultimaJogada;//jogada a ser desfeita pelo metodo UNDO
 	private final int MAX_HEURISTICA = 42; // valor máximo da heurística
 	
 	private Jogador jogador1, jogador2;
@@ -25,9 +27,11 @@ public class Jogo {
 	
 	public Jogo() {	    
 	    // TODO: receber os jogadores	    
+		Nocupadas = 0;
 	}	
 	// TODO
 	public Jogo(Jogador[][][] tabuleiro) {
+		Nocupadas = 0;
 	    // não copiar a instância tabuleiro, mas sim os valores!
 	}
 	
@@ -50,14 +54,48 @@ public class Jogo {
                 throw new JogadaIlegal();
             } else {
                 this.tabuleiro[x][y][z] = jogador;
-                //this.verificaTermino();
+                Nocupadas++;
+                ultimaJogada = new Jogada(jogador,new Posicao(x,y,z));
             }
         }
        
+    //Attention to changes. The 'casinhas ocupadas' must be updated
 	public void jogar(Jogada jogada) throws JogadaIlegal {
 		int[] coord = jogada.getPosicao().getCoord();           
         this.jogar(jogada.getJogador(),coord[0],coord[1],coord[2]);
 	}
+	
+	/**
+	 * Apenas desfaz a última!
+	 */
+	public void undo(){
+		if(ultimaJogada==null)return;
+		int x = ultimaJogada.getPosicao().getCoord()[0];
+		int y = ultimaJogada.getPosicao().getCoord()[1];
+		int z = ultimaJogada.getPosicao().getCoord()[2];
+		this.tabuleiro[x][y][z]=null;
+		ultimaJogada=null;
+	}
+	/**
+	 * Informa posição que jogador deve jogar para vencer imediatamente
+	 * @return null caso não seja possível vencer em uma jogada
+	 */
+	public int[] marcaPraVencer(Jogador jogador){
+		Jogada jogadas[] = this.possiveisJogadas(jogador);
+		Jogo copia = new Jogo(this.viewTabuleiro());
+		
+		for(Jogada j: jogadas){
+			try {
+				copia.jogar(j);
+				if(copia.verificaTermino(jogador))return j.getPosicao().getCoord();
+				copia.undo();
+			} catch (JogadaIlegal e) {
+				System.out.println("Implemente adequadamente o metodo possiveisJogadas, por favor");
+			}			
+		}		
+		return null;
+	}
+	
 	
 	/**
 	 * Heurística Extendida Para Grupo
@@ -160,12 +198,18 @@ public class Jogo {
 	/**
 	 * Define todas as jogadas que o jogador pode executar na situação atual
 	 * @param jogador
-	 * @return
+	 * @return null caso não haja jogada possível
 	 */
 	public Jogada[] possiveisJogadas(Jogador jogador) {
+		int d = this.N-this.Nocupadas;//quantidade de posicoes disponiveis
+		Jogada[] ret = new Jogada[d];
+		for(int i=0,c=0	;i<N && c<d;i++)
+		for(int j=0		;j<N && c<d;j++)
+		for(int k=0		;k<N && c<d;k++)
+			if(tabuleiro[i][j][k]==null)
+				ret[c++] = new Jogada(jogador,new Posicao(i,j,k));
 	    
-	    // TODO
-	    return null;
+	    return d!=0? ret:null;
 	}
 	
 	/**
