@@ -201,7 +201,8 @@ public class Jogo {
 	 * @return null caso não haja jogada possível
 	 */
 	public Jogada[] possiveisJogadas(Jogador jogador) {
-		int d = this.N-this.Nocupadas;//quantidade de posicoes disponiveis
+		int d = this.N*this.N*this.N-this.Nocupadas;//quantidade de posicoes disponiveis
+		//System.out.println(this.Nocupadas);
 		Jogada[] ret = new Jogada[d];
 		for(int i=0,c=0	;i<N && c<d;i++)
 		for(int j=0		;j<N && c<d;j++)
