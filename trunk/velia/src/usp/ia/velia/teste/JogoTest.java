@@ -29,25 +29,25 @@ public class JogoTest {
 		hleo = jogo.heuristica(leo);
 		hgui = jogo.heuristica(gui);		
 		//System.out.println(h);
-		assertEquals(hleo,27+18);
-		assertEquals(hgui,27+18);
+		assertEquals(hleo,27+18+4);
+		assertEquals(hgui,27+18+4);
 		
 		jogo.jogar(leo,0,0,0);
 		hleo = jogo.heuristica(leo);
 		hgui = jogo.heuristica(gui);		
 		//System.out.println(h);
-		assertEquals(27+18,hleo);
-		assertEquals(24+15,hgui);
+		assertEquals(27+18+4,hleo);
+		assertEquals(24+15+3,hgui);
 		
 		jogo.jogar(gui,1,1,1);
 		hleo = jogo.heuristica(leo);
 		hgui = jogo.heuristica(gui);		
 		//System.out.println(h);
-		assertEquals(36,hleo);
-		assertEquals(24+15,hgui);
+		assertEquals(24+12+0,hleo);
+		assertEquals(24+15+3,hgui);
 		
-		long i =(long)2*2*2*3*3*3*5*5*5*7*7*7*11*11*11*13*13*13;
-		System.out.println(i+"\t"+Long.MAX_VALUE);
+		//long i =(long)2*2*2*3*3*3*5*5*5*7*7*7*11*11*11*13*13*13;
+		//System.out.println(i+"\t"+Long.MAX_VALUE);
 	}
 
 }
