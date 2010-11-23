@@ -31,13 +31,18 @@ public class Jogo {
 	    Nocupadas = 0;
 	}	
 
-	public Jogo(Jogador[][][] tabuleiro) {
-		Nocupadas = 0;
+	public Jogo(Jogo outro) {
+		Nocupadas = outro.Nocupadas;
+		Jogador[][][] tab = outro.viewTabuleiro();
+		this.jogador1=outro.jogador1;
+		this.jogador2=outro.jogador2;
+		this.ultimaJogada=outro.ultimaJogada;
+		
 		this.tabuleiro = new Jogador[3][3][3];
 		for (int i=0; i<N; i++)
 	                for (int j=0; j<N; j++)
 	                    for (int k=0; k<N; k++)
-	                        this.tabuleiro[i][j][k] = tabuleiro[i][j][k];
+	                        this.tabuleiro[i][j][k] = tab[i][j][k];
 	}
 	
 	public Jogador[][][] viewTabuleiro() {
@@ -87,7 +92,7 @@ public class Jogo {
 	 */
 	public int[] marcaPraVencer(Jogador jogador){
 		Jogada jogadas[] = this.possiveisJogadas(jogador);
-		Jogo copia = new Jogo(this.viewTabuleiro());
+		Jogo copia = new Jogo(this);
 		
 		for(Jogada j: jogadas){
 			try {
