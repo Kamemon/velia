@@ -17,6 +17,7 @@ public abstract class Jogador {
     public String getNome() {
         return nome;
     }
+    public String toString(){return getNome();}
     public Insignia getInsignia() {
         return insignia;
     }

@@ -9,6 +9,10 @@ public class Jogada {
         this.jogador = jogador;
         this.posicao = posicao;
     }
+
+    public Jogada(Jogador jogador,int x,int y, int z) {
+        this(jogador, new Posicao(x,y,z));
+    }
     
     public Jogador getJogador() {
         return jogador;
