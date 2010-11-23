@@ -23,7 +23,7 @@ public class Jogo {
 	// atributos usados quando alguém vence o jogo
 	private Jogador vencedor;
 	private int[][] risca; // como o jogador venceu (3 triplas ordenados!)
-	private boolean finished = false;
+
 	
 	public Jogo(Jogador jogador1, Jogador jogador2) {	    
 	    this.jogador1 = jogador1;
@@ -223,20 +223,15 @@ public class Jogo {
 	    return ret;
 	}
 	
-	/**
-	 * Indica se jogo já acabou
-	 * @return
-	 */
-	public boolean isFinished() {	    
-	    return finished;
-	}
 
 	/**
 	 * Checa se jogo já terminou
 	 * Caso sim, seta vencedor e risca
 	 */
 	public boolean verificaTermino(Jogador jogador) {
-		return XHeuPGrupo(new Jogador[]{jogador}) > 0;
+		boolean venceu = XHeuPGrupo(new Jogador[]{jogador}) > 0;
+		if(venceu)vencedor=jogador;
+		return venceu;
 	}
 	
 	public Jogador getVencedor() {        
