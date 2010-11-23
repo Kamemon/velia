@@ -195,7 +195,16 @@ public class Jogo {
 	 * @return
 	 */
 	public int heuristica(Jogador jogador) {		
-		return XHeuPGrupo(new Jogador[]{jogador,null});
+	    Jogador outro = getAdversarioFrom(jogador);    
+	    // heurística "crua", definida pelas possibilidades de vitória do jogador e do adversário
+	    int h = XHeuPGrupo(new Jogador[]{jogador,null}) - XHeuPGrupo(new Jogador[]{outro,null});
+	    // heurística manipulada, definida pelas possibilidades de vitória iminente
+	    // do jogador ou do adversário
+	    if (marcaPraVencer(jogador) != null)
+	        h += 10;
+            if (marcaPraVencer(outro) != null)
+                h -= 10;
+	    return h;
 	}
 	
 	
