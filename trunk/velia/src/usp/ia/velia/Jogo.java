@@ -75,8 +75,10 @@ public class Jogo {
        
     //Attention to changes. The 'casinhas ocupadas' must be updated
 	public void jogar(Jogada jogada) throws JogadaIlegal {
-		int[] coord = jogada.getPosicao().getCoord();           
-        this.jogar(jogada.getJogador(),coord[0],coord[1],coord[2]);
+	    
+	    Posicao pos = jogada.getPosicao();
+	    int[] coord = pos.getCoord();           
+            this.jogar(jogada.getJogador(),coord[0],coord[1],coord[2]);
 	}
 	
 	/**
@@ -221,8 +223,9 @@ public class Jogo {
 		for(int i=0,c=0	;i<N && c<d;i++)
 		for(int j=0		;j<N && c<d;j++)
 		for(int k=0		;k<N && c<d;k++)
-			if(tabuleiro[i][j][k]==null)
+			if(tabuleiro[i][j][k]==null) {
 				ret[c++] = new Jogada(jogador,new Posicao(i,j,k));
+			}
 	    
 	    return ret;
 	}

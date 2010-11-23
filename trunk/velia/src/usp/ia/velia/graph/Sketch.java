@@ -40,7 +40,7 @@ public class Sketch extends PApplet {
         this.maquina = new JogadorMaquina("Máquina", Insignia.O);
         this.jogo = new Jogo(humano, maquina);
         this.tab = new Tabuleiro(this, jogo);
-        this.jogadorDaVez = maquina;
+        this.jogadorDaVez = humano;
     }
     
     public void draw() {
@@ -121,10 +121,10 @@ public class Sketch extends PApplet {
             jogadorDaVez = maquina;
             this.tab.disableCursor();
             
-            this.verificaTermino();
+            this.verificaTermino(humano);
         }
         
-        if (jogadorDaVez == maquina) {
+        if (jogadorDaVez == maquina && !jogo.isFinished()) {
             
             // agora é vez da máquina jogar
             int[] pos = maquina.escolheJogada(jogo);
@@ -134,7 +134,7 @@ public class Sketch extends PApplet {
                 e.printStackTrace();
             }
 
-            this.verificaTermino();
+            this.verificaTermino(maquina);
 
             jogadorDaVez = humano;
             // volta o cursor
@@ -144,12 +144,12 @@ public class Sketch extends PApplet {
 
     }
     
-    private void verificaTermino() {
+    private void verificaTermino(Jogador jogador) {
 
         if (this.jogo.isFinished()) { // acabou
             
             this.tab.finish(jogo.getRisca());
-            Jogador vencedor = jogo.getVencedor();
+            Jogador vencedor = this.jogo.getVencedor();
             System.out.println(vencedor.getNome() + " venceu");
         }
     }
