@@ -1,7 +1,8 @@
 package usp.ia.velia.minimax;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import usp.ia.velia.minimax.MiniMaxInfo.Tipo;
 import usp.ia.velia.tree.Tree;
@@ -20,7 +21,6 @@ public class MiniMaxTree<T> {
 
     private TreeNode<MiniMaxInfo<T>> root = new TreeNode<MiniMaxInfo<T>>(ROOT_LABEL);
     private Tree<MiniMaxInfo<T>> arvore = new Tree<MiniMaxInfo<T>>(root);
-    private List<TreeNode<MiniMaxInfo<T>>> leafs = new ArrayList<TreeNode<MiniMaxInfo<T>>>();
 
     /**
      * 
@@ -86,7 +86,6 @@ public class MiniMaxTree<T> {
 
         TreeNode<MiniMaxInfo<T>> leaf = createNode(pai, jogada);
         leaf.getToken().setValue(heuristica);
-        this.leafs.add(leaf);
     }
 
     /**
@@ -168,6 +167,20 @@ public class MiniMaxTree<T> {
         }
         
         return jogada;
+    }
+    
+    public void valuesInPolishNotationInFile() {
+        
+        String polish = this.valuesInPolishNotation();
+        File file = new File("tree.out");
+        try {
+            FileWriter fw = new FileWriter(file);
+            fw.write(polish);
+            fw.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
     }
     
     /**

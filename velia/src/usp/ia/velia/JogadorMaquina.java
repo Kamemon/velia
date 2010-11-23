@@ -29,6 +29,11 @@ public class JogadorMaquina extends Jogador {
     
     private int[] escolheJogadaMiniMax(Jogo jogoAtual) throws JogadaIlegal {
         
+        // antes de usar minimax vê se dá pra ganhar de cara
+        int[] marca = jogoAtual.marcaPraVencer(this);
+        if (marca != null)
+            return marca;
+        
         // pra cada jogo resultante de uma possível jogada do agente na situação atual do jogo
         // avaliar próximas jogadas possívels do jogador adversário
         // fazer isso ainda mais outra vez para as jogadas seguintes do agente
@@ -62,6 +67,7 @@ public class JogadorMaquina extends Jogador {
         }
         
         minimax.finishTree();
+        //minimax.valuesInPolishNotationInFile();
         return minimax.getNextJogada().getPosicao().getCoord();
     }
 }

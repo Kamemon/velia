@@ -21,7 +21,7 @@ public class JogoTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		jogo = new Jogo();
+		jogo = new Jogo(leo, gui);
 		N = 3;
 	}
 

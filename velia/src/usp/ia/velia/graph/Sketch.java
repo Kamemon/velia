@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import usp.ia.velia.JogadaIlegal;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.JogadorHumano;
-import usp.ia.velia.JogadorMaqSimples;
+import usp.ia.velia.JogadorMaquina;
 import usp.ia.velia.Jogo;
 import usp.ia.velia.Jogador.Insignia;
 
@@ -37,10 +37,10 @@ public class Sketch extends PApplet {
 
         // configurações do jogo
         this.humano = new JogadorHumano("Humano", Insignia.X);
-        this.maquina = new JogadorMaqSimples("Máquina", Insignia.O);
-        this.jogo = new Jogo();
+        this.maquina = new JogadorMaquina("Máquina", Insignia.O);
+        this.jogo = new Jogo(humano, maquina);
         this.tab = new Tabuleiro(this, jogo);
-        this.jogadorDaVez = humano;
+        this.jogadorDaVez = maquina;
     }
     
     public void draw() {
@@ -122,6 +122,9 @@ public class Sketch extends PApplet {
             this.tab.disableCursor();
             
             this.verificaTermino();
+        }
+        
+        if (jogadorDaVez == maquina) {
             
             // agora é vez da máquina jogar
             int[] pos = maquina.escolheJogada(jogo);

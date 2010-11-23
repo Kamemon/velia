@@ -22,5 +22,15 @@ public class Posicao {
     public int[] getCoord() {
         return Arrays.copyOf(coord,N);
     }
+
+    @Override
+    public String toString() {
+        int x = coord[0];
+        int y = coord[1];
+        int z = coord[2];
+        return "("+x+","+y+","+z+")";
+    }
+    
+    
     
 }

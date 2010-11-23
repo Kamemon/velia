@@ -23,5 +23,17 @@ public class Jogada {
         this.posicao = posicao;
     }
 
-    
+    @Override
+    public String toString() {
+        String str = "";
+        if (jogador != null) {
+            str = jogador.getNome();
+        }
+        if (jogador != null && posicao != null) {
+            str += " em ";
+        }
+        if (posicao != null)
+            str += posicao.toString();
+        return str;
+    }
 }

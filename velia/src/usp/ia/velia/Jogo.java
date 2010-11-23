@@ -25,14 +25,19 @@ public class Jogo {
 	private int[][] risca; // como o jogador venceu (3 triplas ordenados!)
 	private boolean finished = false;
 	
-	public Jogo() {	    
-	    // TODO: receber os jogadores	    
-		Nocupadas = 0;
+	public Jogo(Jogador jogador1, Jogador jogador2) {	    
+	    this.jogador1 = jogador1;
+	    this.jogador2 = jogador2;
+	    Nocupadas = 0;
 	}	
-	// TODO
+
 	public Jogo(Jogador[][][] tabuleiro) {
 		Nocupadas = 0;
-	    // não copiar a instância tabuleiro, mas sim os valores!
+		this.tabuleiro = new Jogador[3][3][3];
+		for (int i=0; i<N; i++)
+	                for (int j=0; j<N; j++)
+	                    for (int k=0; k<N; k++)
+	                        this.tabuleiro[i][j][k] = tabuleiro[i][j][k];
 	}
 	
 	public Jogador[][][] viewTabuleiro() {
