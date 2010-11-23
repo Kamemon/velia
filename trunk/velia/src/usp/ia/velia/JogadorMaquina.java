@@ -29,17 +29,27 @@ public class JogadorMaquina extends Jogador {
     
     private int[] escolheJogadaMiniMax(Jogo jogoAtual) throws JogadaIlegal {
         
+        Jogador adversario = jogoAtual.getAdversarioFrom(this);
+
+        // modo agressivo
         // antes de usar minimax vê se dá pra ganhar de cara
         int[] marca = jogoAtual.marcaPraVencer(this);
+        System.out.println(marca);
         if (marca != null)
             return marca;
         
+        // modo defensivo
+        // vê se adversário está na iminência de vencer
+        marca = jogoAtual.marcaPraVencer(adversario);
+        if (marca != null)
+            return marca;
+        
+        // modo mini-max
         // pra cada jogo resultante de uma possível jogada do agente na situação atual do jogo
         // avaliar próximas jogadas possívels do jogador adversário
         // fazer isso ainda mais outra vez para as jogadas seguintes do agente
 
         MiniMaxTree<Jogada> minimax = new MiniMaxTree<Jogada>();
-        Jogador adversario = jogoAtual.getAdversarioFrom(this);
         
         // coloca primeiro nível na árvore minimax
         for (Jogada primeiraJogada: jogoAtual.possiveisJogadas(this)) {
