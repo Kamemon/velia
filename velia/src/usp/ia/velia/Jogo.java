@@ -13,7 +13,7 @@ public class Jogo {
 	private final int N = 3; // dimensão, no caso tradicional 3
 	private int Nocupadas;//quantidade de casinhas ocupadas
 	private Jogada ultimaJogada;//jogada a ser desfeita pelo metodo UNDO
-	private final int MAX_HEURISTICA = 49; // valor máximo da heurística
+	public static final int MAX_HEURISTICA = 49; // valor máximo da heurística
 	
 	private boolean finished;
 	private Jogador jogador1, jogador2;
@@ -39,7 +39,8 @@ public class Jogo {
 		Jogador[][][] tab = outro.viewTabuleiro();
 		this.jogador1=outro.jogador1;
 		this.jogador2=outro.jogador2;
-		this.ultimaJogada=outro.ultimaJogada;
+		if(outro.ultimaJogada!=null)
+			this.ultimaJogada=new Jogada(outro.ultimaJogada.getJogador(),outro.ultimaJogada.getPosicao());
 		this.finished=outro.finished;
 		this.tabuleiro = new Jogador[3][3][3];
 		for (int i=0; i<N; i++)
@@ -74,8 +75,7 @@ public class Jogo {
         }
        
     //Attention to changes. The 'casinhas ocupadas' must be updated
-	public void jogar(Jogada jogada) throws JogadaIlegal {
-	    
+	public void jogar(Jogada jogada) throws JogadaIlegal {	    
 	    Posicao pos = jogada.getPosicao();
 	    int[] coord = pos.getCoord();           
             this.jogar(jogada.getJogador(),coord[0],coord[1],coord[2]);
@@ -90,21 +90,22 @@ public class Jogo {
 		int y = ultimaJogada.getPosicao().getCoord()[1];
 		int z = ultimaJogada.getPosicao().getCoord()[2];
 		this.tabuleiro[x][y][z]=null;
+		Jogador ultimo = ultimaJogada.getJogador();
 		ultimaJogada=null;
 		finished = false;
 		vencedor = null;
 		risca = null;
 		Nocupadas--;
+		verificaTermino(ultimo);
 	}
 	/**
 	 * Informa posição que jogador deve jogar para vencer imediatamente
 	 * @return null caso não seja possível vencer em uma jogada
 	 */
-	public int[] marcaPraVencer(Jogador jogador){
+	public int[] marcaPraVencer(Jogador jogador){		
 		Jogada jogadas[] = this.possiveisJogadas(jogador);
-		Jogo copia = new Jogo(this);
-		
-		for(Jogada j: jogadas){
+		Jogo copia = new Jogo(this);		
+		for(Jogada j: jogadas){				
 			try {
 				copia.jogar(j);
 				if(copia.getVencedor()==jogador)return j.getPosicao().getCoord();
@@ -143,6 +144,7 @@ public class Jogo {
 			projdiag[i] = 1;
 		}		
 		
+		// calcula projeções
 		for(k=0;k<N;k++)
 			for(j=0;j<N;j++)
 				for(i=0,conta=false;i<N;conta=false,i++){
@@ -167,12 +169,13 @@ public class Jogo {
 						//ATENCAO ao (1,1,1) (no caso N=3)						
 						if(j==i && k==i)		projMulD*=primo[0];
 						if(j==i && k==N-1-i)	projMulD*=primo[1];
-						if(j==N-1-1 && k==i)	projMulD*=primo[2];
-						if(j==N-1-1 && k==N-1-i)projMulD*=primo[3];
+						if(j==N-1-i && k==i)	projMulD*=primo[2];
+						if(j==N-1-i && k==N-1-i)projMulD*=primo[3];
 	
 					}
 				}
 				
+		// verifica "unidimensionais"
 		//atenção: a semantica dos contadores agora eh outra
 		//nesses 3 for's, a heuristica maxima de saída é 27
 		for(i=0;i<N;i++)
@@ -180,13 +183,14 @@ public class Jogo {
 				for(k=0;k<3;k++)
 					if(projecao[i][j] % Math.pow(primo[k],3) == 0)heuristica++;
 		
-		
+		// verifica "diagonais planares"
 		int hdiag=0;
 		for(i=0;i<N;i++)//percorre o vetor projdiag
 			for(j=0;j<2;j++)//itera entre diagonal principal e reversa
 				for(k=0;k<3;k++)//pra cada posição do projdiag, pra cada diagonal, checa os 3 planos
 					if(projdiag[i] % Math.pow(primo[j*N+k],3) == 0)hdiag++;
 		
+		// verifica diagonais "multi-dimensionais"
 		int hMulD=0;
 		for(i=0;i<4;i++)	if(projMulD % Math.pow(primo[i], 3)==0)hMulD++;
 				
@@ -201,7 +205,10 @@ public class Jogo {
 	public int heuristica(Jogador jogador) {		
 	    Jogador outro = getAdversarioFrom(jogador);    
 	    // heurística "crua", definida pelas possibilidades de vitória do jogador e do adversário
-	    int h = XHeuPGrupo(new Jogador[]{jogador,null}) - XHeuPGrupo(new Jogador[]{outro,null});
+	    
+	    //int h = XHeuPGrupo(new Jogador[]{jogador,null}) - XHeuPGrupo(new Jogador[]{outro,null});
+	    int h = XHeuPGrupo(new Jogador[]{jogador,null});
+	    
 	    // heurística manipulada, definida pelas possibilidades de vitória iminente
 	    // do jogador ou do adversário
 //	    if (marcaPraVencer(jogador) != null)
@@ -251,7 +258,9 @@ public class Jogo {
 	 * Caso sim, seta vencedor e risca
 	 */
 	private void verificaTermino(Jogador jogador) {
-		boolean venceu = XHeuPGrupo(new Jogador[]{jogador}) > 0;
+		int heu = XHeuPGrupo(new Jogador[]{jogador});
+		
+		boolean venceu = heu > 0;
 		if(venceu){
 			vencedor=jogador;
 			finished|=venceu;
@@ -300,5 +309,22 @@ public class Jogo {
 	public int[][] getRisca() {
 		
 	    return risca;
+	}
+	public String toString(){
+		String resp="";
+		
+		for(int j=0;j<N;j++){
+			for(int k=0;k<N;k++){
+				for(int i=0;i<N;i++)
+					if(tabuleiro[i][j][k]!=null)
+						resp+=tabuleiro[i][j][k].getNome()+" ";
+					else
+						resp+="  - ";
+				resp+="\t";
+			}
+			resp+="\n";
+		}
+		
+		return resp;
 	}
 }
