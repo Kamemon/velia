@@ -15,8 +15,10 @@ public class Jogo {
 	private Jogada ultimaJogada;//jogada a ser desfeita pelo metodo UNDO
 	private final int MAX_HEURISTICA = 49; // valor máximo da heurística
 	
+	private boolean finished;
 	private Jogador jogador1, jogador2;
 	
+
 	// a posição do tabuleiro indica qual jogador jogou naquela posição
 	private Jogador[][][] tabuleiro = new Jogador[N][N][N]; 
 
@@ -29,6 +31,7 @@ public class Jogo {
 	    this.jogador1 = jogador1;
 	    this.jogador2 = jogador2;
 	    Nocupadas = 0;
+	    finished=false;
 	}	
 
 	public Jogo(Jogo outro) {
@@ -37,7 +40,7 @@ public class Jogo {
 		this.jogador1=outro.jogador1;
 		this.jogador2=outro.jogador2;
 		this.ultimaJogada=outro.ultimaJogada;
-		
+		this.finished=outro.finished;
 		this.tabuleiro = new Jogador[3][3][3];
 		for (int i=0; i<N; i++)
 	                for (int j=0; j<N; j++)
@@ -66,6 +69,7 @@ public class Jogo {
                 this.tabuleiro[x][y][z] = jogador;
                 Nocupadas++;
                 ultimaJogada = new Jogada(jogador,new Posicao(x,y,z));
+                verificaTermino(jogador);
             }
         }
        
@@ -97,7 +101,7 @@ public class Jogo {
 		for(Jogada j: jogadas){
 			try {
 				copia.jogar(j);
-				if(copia.verificaTermino(jogador))return j.getPosicao().getCoord();
+				if(copia.getVencedor()==jogador)return j.getPosicao().getCoord();
 				copia.undo();
 			} catch (JogadaIlegal e) {
 				System.out.println("Implemente adequadamente o metodo possiveisJogadas, por favor");
@@ -228,16 +232,50 @@ public class Jogo {
 	 * Checa se jogo já terminou
 	 * Caso sim, seta vencedor e risca
 	 */
-	public boolean verificaTermino(Jogador jogador) {
+	private void verificaTermino(Jogador jogador) {
 		boolean venceu = XHeuPGrupo(new Jogador[]{jogador}) > 0;
-		if(venceu)vencedor=jogador;
-		return venceu;
+		if(venceu){
+			vencedor=jogador;
+			finished|=venceu;
+			defineRisca();
+			
+		}
+	}
+	private void defineRisca(){
+		//int offset=0;//de 0 a 2..cardinalidade do ponto na risca
+		risca = new int[N][3];
+		
+		//int[][] uteis = new int[0][3];
+		//int i,j,k;
+		//for(int i=0;i<)
+		defineRisca_aux(0,0,0,0);
+		
+		
+	}
+	private void defineRisca_aux(int offset,int fi,int fj,int fk){
+		int i,j,k;
+		for(i=fi;i<N;i++)
+			for(j=fj;j<N;j++)
+				for(k=fk;k<N;k++)
+					if(tabuleiro[i][j][k]==vencedor){
+						risca[offset][0]=i;
+						risca[offset][1]=j;
+						risca[offset][2]=k;
+						if(offset==N-1)return;
+						else defineRisca_aux(offset++,i,j,k);
+					}
+		
 	}
 	
+	
+	public boolean isFinished(){
+		return finished;
+	}
 	public Jogador getVencedor() {        
 	    return vencedor;
 	}	
-	public int[][] getRisca() {	    
+	public int[][] getRisca() {
+		
 	    return risca;
 	}
 }
