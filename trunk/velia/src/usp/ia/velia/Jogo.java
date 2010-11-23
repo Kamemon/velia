@@ -252,7 +252,7 @@ public class Jogo {
 		
 		
 	}
-	private void defineRisca_aux(int offset,int fi,int fj,int fk){
+	private boolean defineRisca_aux(int offset,int fi,int fj,int fk){
 		int i,j,k;
 		for(i=fi;i<N;i++)
 			for(j=fj;j<N;j++)
@@ -261,10 +261,15 @@ public class Jogo {
 						risca[offset][0]=i;
 						risca[offset][1]=j;
 						risca[offset][2]=k;
-						if(offset==N-1)return;
-						else defineRisca_aux(offset++,i,j,k);
+						if(offset==N-1)
+							return true;
+						else{
+							if(defineRisca_aux(offset+1,i+1,j,k))return true;
+							if(defineRisca_aux(offset+1,i,j+1,k))return true;
+							if(defineRisca_aux(offset+1,i,j,k+1))return true;
+						}
 					}
-		
+		return false;
 	}
 	
 	
