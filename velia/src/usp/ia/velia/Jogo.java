@@ -13,7 +13,7 @@ public class Jogo {
 	private final int N = 3; // dimensão, no caso tradicional 3
 	private int Nocupadas;//quantidade de casinhas ocupadas
 	private Jogada ultimaJogada;//jogada a ser desfeita pelo metodo UNDO
-	private final int MAX_HEURISTICA = 42; // valor máximo da heurística
+	private final int MAX_HEURISTICA = 49; // valor máximo da heurística
 	
 	private Jogador jogador1, jogador2;
 	
@@ -215,7 +215,7 @@ public class Jogo {
 			if(tabuleiro[i][j][k]==null)
 				ret[c++] = new Jogada(jogador,new Posicao(i,j,k));
 	    
-	    return d!=0? ret:null;
+	    return ret;
 	}
 	
 	/**
