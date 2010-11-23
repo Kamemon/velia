@@ -91,6 +91,10 @@ public class Jogo {
 		int z = ultimaJogada.getPosicao().getCoord()[2];
 		this.tabuleiro[x][y][z]=null;
 		ultimaJogada=null;
+		finished = false;
+		vencedor = null;
+		risca = null;
+		Nocupadas--;
 	}
 	/**
 	 * Informa posição que jogador deve jogar para vencer imediatamente
@@ -200,10 +204,10 @@ public class Jogo {
 	    int h = XHeuPGrupo(new Jogador[]{jogador,null}) - XHeuPGrupo(new Jogador[]{outro,null});
 	    // heurística manipulada, definida pelas possibilidades de vitória iminente
 	    // do jogador ou do adversário
-	    if (marcaPraVencer(jogador) != null)
-	        h += 10;
-            if (marcaPraVencer(outro) != null)
-                h -= 10;
+//	    if (marcaPraVencer(jogador) != null)
+//	        h += 10;
+//            if (marcaPraVencer(outro) != null)
+//                h -= 10;
 	    return h;
 	}
 	
@@ -226,6 +230,8 @@ public class Jogo {
 	 * @return null caso não haja jogada possível
 	 */
 	public Jogada[] possiveisJogadas(Jogador jogador) {
+	    
+	    //TODO: as vezes d fica com um valor maior do que deveria
 		int d = this.N*this.N*this.N-this.Nocupadas;//quantidade de posicoes disponiveis
 		//System.out.println(this.Nocupadas);
 		Jogada[] ret = new Jogada[d];
