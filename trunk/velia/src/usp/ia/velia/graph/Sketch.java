@@ -41,6 +41,8 @@ public class Sketch extends PApplet {
         this.jogo = new Jogo(humano, maquina);
         this.tab = new Tabuleiro(this, jogo);
         this.jogadorDaVez = humano;
+        Thread thread = new Thread(new AgenteScheduler());
+        thread.start();
     }
     
     public void draw() {
@@ -104,7 +106,7 @@ public class Sketch extends PApplet {
     // TODO: por enquanto algumas coisas aqui (sincronizar e ifs com jogadorDaVez)
     // não fazem sentido porque a jogada de máquina é instantânea,
     // mas depois de implementado o minimax talvez não seja
-    private synchronized void jogada() {
+    private void jogada() {
         
         if (jogadorDaVez == humano) {
             
@@ -123,24 +125,6 @@ public class Sketch extends PApplet {
             
             this.verificaTermino(humano);
         }
-        
-        if (jogadorDaVez == maquina && !jogo.isFinished()) {
-            
-            // agora é vez da máquina jogar
-            int[] pos = maquina.escolheJogada(jogo);
-            try {
-                this.jogo.jogar(maquina, pos[0], pos[1], pos[2]);
-            } catch (JogadaIlegal e) {
-                e.printStackTrace();
-            }
-
-            this.verificaTermino(maquina);
-
-            jogadorDaVez = humano;
-            // volta o cursor
-            this.tab.backCursor();
-            this.tab.enableCursor();
-        }
 
     }
     
@@ -151,6 +135,40 @@ public class Sketch extends PApplet {
             this.tab.finish(jogo.getRisca());
             Jogador vencedor = this.jogo.getVencedor();
             System.out.println(vencedor.getNome() + " venceu");
+        }
+    }
+    
+    private class AgenteScheduler implements Runnable {
+
+        @Override
+        public void run() {
+            
+            while(true) {
+                
+                try {
+                    Thread.sleep(10); // loops infinitos contínuos não são bons
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                
+                if (jogadorDaVez == maquina && !jogo.isFinished()) {
+                    
+                    // agora é vez da máquina jogar
+                    int[] pos = maquina.escolheJogada(jogo);
+                    try {
+                        jogo.jogar(maquina, pos[0], pos[1], pos[2]);
+                    } catch (JogadaIlegal e) {
+                        e.printStackTrace();
+                    }
+        
+                    verificaTermino(maquina);
+        
+                    jogadorDaVez = humano;
+                    // volta o cursor
+                    tab.backCursor();
+                    tab.enableCursor();
+                }        
+            }
         }
     }
 

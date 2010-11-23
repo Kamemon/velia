@@ -3,6 +3,7 @@ package usp.ia.velia.minimax;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import usp.ia.velia.minimax.MiniMaxInfo.Tipo;
 import usp.ia.velia.tree.Tree;
@@ -153,9 +154,15 @@ public class MiniMaxTree<T> {
      */
     public T getNextJogada() {
 
-        T jogada = null;
-        int hmax = 0;
-        for (TreeNode<MiniMaxInfo<T>> node: this.root.getChildNodes()) {
+        if (this.root.getChildNodes().isEmpty())
+            return null;
+        
+        List<TreeNode<MiniMaxInfo<T>>> children = this.root.getChildNodes();
+        int hmax = children.get(0).getToken().getValue();
+        T jogada = children.get(0).getToken().getJogada();
+
+        children.remove(0);
+        for (TreeNode<MiniMaxInfo<T>> node: children) {
             
             MiniMaxInfo<T> info = node.getToken();
             

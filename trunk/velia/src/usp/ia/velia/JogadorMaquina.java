@@ -68,6 +68,8 @@ public class JogadorMaquina extends Jogador {
         
         minimax.finishTree();
         //minimax.valuesInPolishNotationInFile();
-        return minimax.getNextJogada().getPosicao().getCoord();
+        Jogada jog = minimax.getNextJogada();
+        Posicao pos = jog.getPosicao();
+        return pos.getCoord();
     }
 }
