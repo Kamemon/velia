@@ -54,7 +54,7 @@ public class JogadorMaquina extends Jogador {
                 TreeNode<MiniMaxInfo<Jogada>> father2 = minimax.createNode(father1, segundaJogada);
                 Jogo jogo3 = new Jogo(jogo2); // jogo depois do 2o movimento (mini)
                 jogo3.jogar(segundaJogada);
-                
+
                 // folha minimax (com a heurística do jogo resultante do 3o movimento)
                 for (Jogada terceiraJogada: jogo3.possiveisJogadas(this)) {
                     
