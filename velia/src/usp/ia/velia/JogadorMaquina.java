@@ -34,7 +34,6 @@ public class JogadorMaquina extends Jogador {
         // modo agressivo
         // antes de usar minimax vê se dá pra ganhar de cara
         int[] marca = jogoAtual.marcaPraVencer(this);
-        System.out.println(marca);
         if (marca != null)
             return marca;
         

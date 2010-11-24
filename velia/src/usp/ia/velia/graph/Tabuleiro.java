@@ -1,5 +1,7 @@
 package usp.ia.velia.graph;
 
+import java.awt.event.KeyEvent;
+
 import processing.core.PApplet;
 import usp.ia.velia.Jogador;
 import usp.ia.velia.Jogo;
@@ -131,8 +133,9 @@ public class Tabuleiro {
      * Move o cursor pelo tabuleiro de acordo com o comando do usuário
      * Não deixa cursor ir "além tabuleiro"
      * @param key teclas afetam a movimentação: a, s, d, q, w, e
+     * @return posição do cursor após a chamada
      */
-    public void moveCursor(int key) {
+    public int[] moveCursor(int key) {
         
         // posições a serem jogadas
         int x = cursor.getCoord()[0];
@@ -140,19 +143,20 @@ public class Tabuleiro {
         int z = cursor.getCoord()[2];
         
         switch(key) {
-            case 'a': x--; break;
-            case 'd': x++; break;
-            case 's': z++; break;
-            case 'w': z--; break;
-            case 'e': y++; break;
-            case 'q': y--; break;
+            case PApplet.LEFT: x--; break;
+            case PApplet.RIGHT: x++; break;
+            case PApplet.UP: z--; break;
+            case PApplet.DOWN: z++; break;
+            case KeyEvent.VK_PAGE_DOWN: y++; break;
+            case KeyEvent.VK_PAGE_UP: y--; break;
         }
         
         // condições para movimentação válida
         if (x>=0 && x<3 && y>=0 && y<3 && z>=0 && z<3) {
             this.cursor.setCoord(x, y, z);
         }
-        
+
+        return this.cursor.getCoord();
     }
     
     /**

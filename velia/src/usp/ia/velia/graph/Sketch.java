@@ -11,19 +11,17 @@ import usp.ia.velia.Jogador.Insignia;
 @SuppressWarnings("serial")
 public class Sketch extends PApplet {
 
-    private enum GameMode {CAMERA, PLAY};
-
     // atributos do jogo
     private Jogo jogo;
     private Tabuleiro tab;
     private Jogador humano, maquina, jogadorDaVez;
-    private GameMode gameMode = GameMode.CAMERA;
-
+    private String cursorText = "Cursor (0,0,0)";
+    private String textVictory = "";
 
     // rotação do modelo controlada interativamente:
-    float rotX = 0;
-    float rotY = 0;
-    float rotZ = 0;
+    private float rotX = 0;
+    private float rotY = 0;
+    private float rotZ = 0;
 
     public void setup() {
         
@@ -49,7 +47,10 @@ public class Sketch extends PApplet {
         
         lights();
         background(0);
-
+        
+        // textos
+        this.drawMessages();
+        
         // movimento do mouse e teclas de câmera (w, s, a, d, q, e)
         rotateX(rotX);
         rotateY(rotY);
@@ -59,32 +60,36 @@ public class Sketch extends PApplet {
         this.tab.draw();
     }
     
+    private void drawMessages() {
+        
+        this.textSize(10); 
+        this.fill(0, 102, 153);
+        this.text("VELIA", -15, -13);
+
+        this.textSize(5); 
+        this.fill(100, 102, 0);
+        this.text(cursorText, 0, 40);
+
+        this.textSize(6); 
+        this.fill(150, 10, 12);
+        this.text(textVictory, -25, 50);
+    }
+    
     // respostas de comandos do usuário
     public void keyPressed() {
-    
-        // alterna modo de jogo
-        if (key == PApplet.TAB) {
-            if (gameMode == GameMode.CAMERA)
-                gameMode = GameMode.PLAY;
-            else
-                gameMode = GameMode.CAMERA;
-        }
-        
+            
         // controle de câmera
-        if (gameMode == GameMode.CAMERA) {
-            this.moveCamera(key);
-        }
+        this.moveCamera(key);
         
         // controle do cursor e ativação da jogada
-        if (gameMode == GameMode.PLAY) {
-            if (key == PApplet.ENTER) {
-                this.jogada();
-            } else {
-                if (jogadorDaVez == humano)
-                    this.tab.moveCursor(key);
+        if (key == PApplet.ENTER) {
+            this.jogada();
+        } else {
+            if (jogadorDaVez == humano) {
+                int[] pos = this.tab.moveCursor(keyCode);
+                cursorText = "Cursor ("+pos[0]+","+pos[1]+","+pos[2]+")";
             }
         }
-        
     }
     
     private void moveCamera(int key) {
@@ -103,9 +108,6 @@ public class Sketch extends PApplet {
                 rotZ += 0.1;        
     }
     
-    // TODO: por enquanto algumas coisas aqui (sincronizar e ifs com jogadorDaVez)
-    // não fazem sentido porque a jogada de máquina é instantânea,
-    // mas depois de implementado o minimax talvez não seja
     private void jogada() {
         
         if (jogadorDaVez == humano) {
@@ -134,7 +136,7 @@ public class Sketch extends PApplet {
             
             this.tab.finish(jogo.getRisca());
             Jogador vencedor = this.jogo.getVencedor();
-            System.out.println(vencedor.getNome() + " venceu");
+            textVictory = vencedor.getNome() + " venceu";
         }
     }
     
