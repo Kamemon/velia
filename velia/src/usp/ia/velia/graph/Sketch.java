@@ -98,9 +98,9 @@ public class Sketch extends PApplet {
             rotY += -0.1;
         if (key == 'd')
                 rotY += 0.1;
-        if (key == 'w')
-                rotX += -0.1;
         if (key == 's')
+                rotX += -0.1;
+        if (key == 'w')
                 rotX += 0.1;
         if (key == 'q')
                 rotZ += -0.1;
