@@ -1,6 +1,8 @@
 package usp.ia.velia;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -17,6 +19,13 @@ public class Jogo {
 	
 	private boolean finished;
 	private Jogador jogador1, jogador2;
+	
+	//List riscas;
+	int risca_dir[][]={{1,0,0},{0,1,0},{0,0,1},{0,0,0},{0,0,0},{0,0,0}};
+	int risca_dir_id=-1;
+	int risca_ini[]=null;
+	
+	
 	
 
 	// a posição do tabuleiro indica qual jogador jogou naquela posição
@@ -181,7 +190,11 @@ public class Jogo {
 		for(i=0;i<N;i++)
 			for(j=0;j<N;j++)
 				for(k=0;k<3;k++)
-					if(projecao[i][j] % Math.pow(primo[k],3) == 0)heuristica++;
+					if(projecao[i][j] % Math.pow(primo[k],3) == 0){
+						heuristica++;
+						risca_dir_id=k;
+						risca_ini = new int[]{i,j};
+					}
 		
 		// verifica "diagonais planares"
 		int hdiag=0;
@@ -271,13 +284,13 @@ public class Jogo {
 	private void defineRisca(){
 		//int offset=0;//de 0 a 2..cardinalidade do ponto na risca
 		risca = new int[N][3];
-		
+//		System.out.println(12);
 		//int[][] uteis = new int[0][3];
 		//int i,j,k;
 		//for(int i=0;i<)
 		defineRisca_aux(0,0,0,0);
 		
-		
+		//risca=new int[][]{{1,2,3},{7,8,9},{10,13,79}};
 	}
 	private boolean defineRisca_aux(int offset,int fi,int fj,int fk){
 		int i,j,k;
@@ -285,6 +298,7 @@ public class Jogo {
 			for(j=fj;j<N;j++)
 				for(k=fk;k<N;k++)
 					if(tabuleiro[i][j][k]==vencedor){
+						//System.out.println(tabuleiro[i][j][k]);
 						risca[offset][0]=i;
 						risca[offset][1]=j;
 						risca[offset][2]=k;
@@ -307,8 +321,76 @@ public class Jogo {
 	    return vencedor;
 	}	
 	public int[][] getRisca() {
+		List<Posicao> considerar = new ArrayList<Posicao>();
+		List<Posicao> riscas = new ArrayList<Posicao>();
 		
-	    return risca;
+		for(int j=0;j<N;j++)
+			for(int k=0;k<N;k++)
+				for(int i=0;i<N;i++)
+					if(tabuleiro[i][j][k]==vencedor)
+						considerar.add(new Posicao(i,j,k));
+		
+		boolean achou=false;
+		
+		Posicao pos = ultimaJogada.getPosicao();
+		considerar.remove(pos);
+		//infelizmente, testa duas vezes cada par..
+		for(Posicao testa: considerar){
+//			System.out.println("testando contra " + testa);
+			
+			Posicao dif = Posicao.moddif(pos, testa);
+//			System.out.println(pos);
+//			System.out.println(testa);
+			
+			for(Posicao t2:considerar){
+				
+				if(t2!=testa){
+					
+					Posicao dif2 = Posicao.moddif(pos, t2);
+					Posicao dif3 = Posicao.moddif(testa, t2);
+
+//					System.out.println("e tb" + t2);
+//					System.out.println("difs:");
+//					System.out.println(dif);
+//					System.out.println(dif2);
+//					System.out.println(dif3);
+					
+					if(dif.equals(dif2)){//dif3 relaciona os mais distantes
+						riscas.add(testa);
+						riscas.add(pos);
+						riscas.add(t2);
+						achou=true;
+					} else if (dif.equals(dif3)){//dif2 relaciona os mais distantes
+						riscas.add(pos);
+						riscas.add(testa);
+						riscas.add(t2);
+						achou=true;
+					} else if (dif2.equals(dif3)){//dif relaciona os mais distantes
+						riscas.add(testa);
+						riscas.add(t2);
+						riscas.add(pos);
+						achou=true;
+					}					
+				}//if(t2!=testa)
+				if(achou)break;
+			}//for t2 in considerar
+//			considerar.remove(testa); //dá pau..
+			
+			if(achou)break;
+		}
+		
+//		System.out.println("achou = " +achou);
+	
+
+		int[][] resp = new int[3][];
+		int cont=0;
+		
+		if(achou)
+			for(Posicao x : riscas){
+				resp[cont++] = x.getCoord();
+			}
+		
+	    return resp;
 	}
 	public String toString(){
 		String resp="";

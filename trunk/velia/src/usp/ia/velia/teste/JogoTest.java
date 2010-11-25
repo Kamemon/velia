@@ -52,6 +52,33 @@ public class JogoTest {
 		//long i =(long)2*2*2*3*3*3*5*5*5*7*7*7*11*11*11*13*13*13;
 		//System.out.println(i+"\t"+Long.MAX_VALUE);
 	}
+	
+	@Test
+	public void testRisca() throws JogadaIlegal{
+		Jogada[] definidas = {
+				new Jogada(leo,2,0,1),
+				new Jogada(gui,1,1,1),
+				new Jogada(leo,0,0,0),
+				new Jogada(gui,0,2,0),
+				new Jogada(leo,0,0,1),
+				new Jogada(gui,2,0,2),
+				};
+		jogo.jogar(definidas[0]);
+		jogo.jogar(definidas[1]);
+		jogo.jogar(definidas[2]);
+		jogo.jogar(definidas[3]);
+		jogo.jogar(definidas[4]);
+		jogo.jogar(definidas[5]);
+
+		//System.out.println(jogo.getRisca());
+		System.out.println(jogo.getVencedor());
+		for(int[] r : jogo.getRisca())
+			System.out.println(r[0]+"\t"+r[1]+"\t"+r[2]);
+	}
+	
+	
+	
+	
 	@Test
 	public void testXHeuPraUm() throws JogadaIlegal {
 		Jogada[] definidas = {
@@ -78,12 +105,11 @@ public class JogoTest {
 		hgui = jogo.XHeuPGrupo(new Jogador[]{gui});
 		assertEquals(1,hgui);
 		
+		
+		
 		//System.out.println(jogo);
 		//System.out.println(jogo.isFinished() + "\t" + jogo.getVencedor());
-		
-		
-		
-		
+				
 		int hmax = jogo.XHeuPGrupo(new Jogador[]{leo,null,gui});
 		assertEquals(Jogo.MAX_HEURISTICA, hmax);
 	}
